@@ -1,12 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -27,25 +20,30 @@
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       border-top: 5px solid #a71d2a;
-      width: 360px;
+      width: 380px;
     }
     h1 {
       color: #a71d2a;
       font-size: 22px;
       text-align: center;
     }
-    .rekening-box {
-      margin: 15px 0;
-      text-align: center;
+    .field {
+      margin: 16px 0;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #a71d2a;
     }
     input {
       border: 1.5px solid #a71d2a;
       background: #fff5f6;
       padding: 12px;
       width: 100%;
-      font-size: 18px;
-      text-align: center;
+      font-size: 16px;
       border-radius: 6px;
+      box-sizing: border-box;
     }
     button {
       background-color: #a71d2a;
@@ -62,21 +60,28 @@
       font-size: 13px;
       margin-top: 16px;
       color: #333;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
   <div class="card">
     <h1>Informasi Pembayaran</h1>
-    <div class="rekening-box">
-      <p>Bank: <strong>BRI</strong></p>
-      <p>Nama: <strong>RAMDANI</strong></p>
+    
+    <div class="field">
+      <label for="rek">Nomor Rekening</label>
       <input id="rek" value="008001002590564" readonly />
       <button onclick="salinRek()">Salin Nomor Rekening</button>
     </div>
+
+    <div class="field">
+      <label for="nominal">Nominal Transfer</label>
+      <input id="nominal" type="text" placeholder="Contoh: 150000" />
+    </div>
+
     <div class="note">
-      Harap transfer sebesar <strong>Rp150.000</strong> ke nomor rekening di atas. Setelah transfer, kirimkan bukti pembayaran.<br><br>
-      Jika dalam 10 menit belum melakukan pembayaran, konfirmasi terlebih dahulu karena rekening bisa berubah sewaktu-waktu.
+      Setelah melakukan transfer, mohon kirimkan bukti transaksi Anda melalui WhatsApp.<br><br>
+      ⚠️ Jika dalam 10 menit belum melakukan pembayaran, harap konfirmasi terlebih dahulu karena nomor rekening dapat berubah sewaktu-waktu.
     </div>
   </div>
 
@@ -90,5 +95,6 @@
   </script>
 </body>
 </html>
+
 
 
