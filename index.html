@@ -3,145 +3,112 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Informasi Transfer</title>
+  <title>Validus Payment Page</title>
   <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, rgba(58, 58, 60, 0.8), rgba(84, 86, 90, 0.8)),
-                  url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg') no-repeat center center fixed;
+      background-image: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg');
       background-size: cover;
+      background-position: center;
       color: #fff;
+    }
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px 20px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+    }
+    .navbar img {
+      height: 50px;
     }
     .container {
-      position: relative;
-      z-index: 1;
-      max-width: 400px;
-      margin: 100px auto;
-      padding: 30px;
-      background: rgba(0, 0, 0, 0.65);
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+      padding: 120px 20px 40px;
+      max-width: 600px;
+      margin: auto;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
     }
-    .logo {
-      display: block;
-      margin: 0 auto 20px;
-      max-width: 500px;
-    }
-    .bank-logo {
-      display: block;
-      margin: 5px auto;
-      max-width: 50px;
-    }
-    h2 {
-      text-align: center;
+    .account-info {
       margin-bottom: 20px;
-      color: #fff;
-    }
-    .field {
-      margin-bottom: 16px;
-    }
-    .label {
-      font-weight: bold;
-      margin-bottom: 6px;
-      display: block;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      background-color: #fff;
+      background: #fff;
       color: #000;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
     }
-    button {
+    .copy-button, .confirm-button {
+      display: block;
       width: 100%;
-      padding: 10px;
-      background-color: #c4001a;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
+      padding: 12px;
       margin-top: 10px;
+      background-color: #b30000;
+      border: none;
+      color: white;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
     }
-    button:hover {
-      background-color: #a00016;
+    .copy-button:hover, .confirm-button:hover {
+      background-color: #800000;
+    }
+    .note, .instructions {
+      margin-top: 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #000;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .instructions ul {
+      margin-top: 10px;
+      padding-left: 20px;
     }
   </style>
 </head>
 <body>
-  <!-- Logo tetap di atas -->
-  <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" style="position: fixed; top: 20px; left: 20px; z-index: 999; width: 140px;">
-
-  <!-- Konten panjang -->
-  <div style="margin-top: 100px;">
-    <p>Konten halaman yang panjang...</p>
-    <p>Scroll terus...</p>
+  <div class="navbar">
+    <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Validus Logo">
   </div>
-</body>
-  <body>
-    <h2>Informasi Rekening</h2>
-    <img src="https://images.seeklogo.com/logo-png/38/2/bank-bri-logo-png_seeklogo-382871.png" alt="Bank BRI" style="display: block; margin: 5px auto; width: auto; height: auto;">
-    <div class="field">
-      <span class="label">Nama Rekening</span>
-      <div>RIZAL SAPUTRA</div>
+
+  <div class="container">
+    <div class="account-info">
+      <h3>Bank: BRI</h3>
+      <p>Atas Nama: <strong>RIZAL SAPUTRA</strong></p>
+      <p>No. Rekening:</p>
+      <input type="text" value="008001002590564" id="rekening" readonly style="text-align:center; font-size: 18px; border: none; width: 100%;">
+      <button class="copy-button" onclick="salinRekening()">Salin Nomor Rekening</button>
     </div>
-    <div class="field">
-      <span class="label">Nomor Rekening</span>
-      <input type="text" value="008001002590564" id="rekNumber" readonly>
-      <button onclick="copyRekening()">Salin Nomor Rekening</button>
+
+    <label for="nominal">Nominal Transfer:</label>
+    <input type="text" id="nominal" placeholder="Contoh: 150000" style="width: 100%; padding: 10px; font-size: 16px; margin-top: 5px;">
+
+    <div class="note">
+      <strong>Silakan kirim jumlah transfer yang benar, agar tidak mempengaruhi waktu tinjauan keuangan pesanan.</strong>
+      <button class="confirm-button" onclick="window.location.href='https://platform00.com/index/my/index'">Saya sudah membayarkannya</button>
     </div>
-    <div class="field">
-      <span class="label">Nominal Transfer</span>
-      <input type="text" id="amount" oninput="formatRupiah(this)">
-  <p style="text-align: center; font-size: 16px; margin-top: 20px; font-weight: bold;">
-  Silakan kirim jumlah transaksi yang benar, agar tidak mempengaruhi waktu tinjauan keuangan pesanan
-</p>
- </div>
-  <div style="margin: 20px auto; max-width: 600px; font-size: 14px; line-height: 1.6; color: #eee; background-color: #222; padding: 20px; border-radius: 8px;">
-  <strong>Petunjuk：</strong>
-  <ol>
-    <li>Untuk transfer, silakan klik "Salin nomor rekening", dan buka online banking, mobile banking, atau ATM untuk menyelesaikan transfer dan mengisi ulang.</li>
-    <li>Setelah proses isi ulang telah dilakukan, kirimkan bukti transaksi yang berhasil kepada mentor/guru. Apabila dalam rentang waktu 15–20 menit belum melakukan pembayaran, harap refresh halaman terlebih dahulu, karena nomor rekening dapat berubah sewaktu-waktu.</li>
-  </ol>
-</div>
+
+    <div class="instructions">
+      <strong>Petunjuk：</strong>
+      <ul>
+        <li>Untuk transfer, silakan klik "Salin nomor rekening", dan buka online banking, mobile banking, atau ATM untuk menyelesaikan transfer dan mengisi ulang.</li>
+        <li>Setelah proses isi ulang telah dilakukan, kirimkan bukti transaksi yang berhasil kepada mentor/guru. Apabila dalam rentang waktu 15–20 menit belum melakukan pembayaran, harap refresh halaman terlebih dahulu, karena nomor rekening dapat berubah sewaktu-waktu.</li>
+      </ul>
+    </div>
+  </div>
 
   <script>
-    function copyRekening() {
-      var copyText = document.getElementById("rekNumber");
-      copyText.select();
-      copyText.setSelectionRange(0, 99999);
+    function salinRekening() {
+      var rekening = document.getElementById("rekening");
+      rekening.select();
+      rekening.setSelectionRange(0, 99999); 
       document.execCommand("copy");
-      alert("Nomor rekening disalin: " + copyText.value);
-    }
-
-    function formatRupiah(input) {
-      var value = input.value.replace(/[^,\d]/g, '').toString();
-      var split = value.split(',');
-      var sisa = split[0].length % 3;
-      var rupiah = split[0].substr(0, sisa);
-      var ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-      if (ribuan) {
-        var separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join('.');
-      }
-
-      rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-      input.value = 'Rp ' + rupiah;
+      alert("Nomor rekening telah disalin: " + rekening.value);
     }
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
