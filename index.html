@@ -8,90 +8,109 @@
 <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
 <head>
   <meta charset="UTF-8">
-  <title>Informasi Isi Ulang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Info Pembayaran</title>
+  <link rel="icon" href="favicon.png">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f2f2f2;
-      padding: 30px;
-    }
-    .container {
-      background-color: #fff;
+      margin: 0;
       padding: 20px;
-      max-width: 400px;
-      margin: auto;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f8f9fa, #e1e2e6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-    h2 {
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+      max-width: 420px;
+      width: 100%;
+      padding: 30px;
       text-align: center;
+    }
+    h1 {
+      font-size: 24px;
+      color: #222;
+      margin-bottom: 24px;
+    }
+    .detail {
+      text-align: left;
+      margin-bottom: 20px;
+      font-size: 16px;
       color: #333;
     }
-    p {
-      font-size: 16px;
-      margin: 10px 0;
+    .detail p {
+      margin: 8px 0;
     }
-    input {
-      font-size: 18px;
-      padding: 10px;
+    .label {
+      font-weight: 600;
+    }
+    #rekening {
       width: 100%;
-      margin: 10px 0;
+      padding: 12px;
+      font-size: 18px;
+      margin: 12px 0;
+      border: 1.5px solid #007bff;
+      border-radius: 6px;
+      background: #f5f9ff;
       text-align: center;
+      color: #111;
     }
     button {
-      background-color: #007bff;
+      background: #007bff;
       color: white;
-      border: none;
-      padding: 10px 20px;
-      width: 100%;
+      padding: 12px;
       font-size: 16px;
+      width: 100%;
+      border: none;
       border-radius: 6px;
       cursor: pointer;
     }
     button:hover {
-      background-color: #0056b3;
+      background: #0056b3;
+    }
+    .notif {
+      margin-top: 12px;
+      color: green;
+      font-size: 14px;
     }
     .note {
+      text-align: left;
       font-size: 14px;
       color: #555;
-      margin-top: 15px;
-    }
-    .success {
-      color: green;
-      text-align: center;
-      margin-top: 10px;
+      margin-top: 20px;
+      line-height: 1.4;
     }
   </style>
 </head>
 <body>
-
-  <div class="container">
-    <h2>💳 Informasi Isi Ulang</h2>
-    <p><strong>Bank:</strong> BRI</p>
-    <p><strong>Nama:</strong> RIZAL SAPUTRA</p>
-    <p><strong>Nomor Rekening:</strong></p>
-    <input type="text" value="001901002847568" id="rekening" readonly>
+  <div class="card">
+    <h1>💳 Informasi Pembayaran</h1>
+    <div class="detail">
+      <p><span class="label">Bank:</span> BRI</p>
+      <p><span class="label">Nama Penerima:</span> RAMDANI</p>
+      <p><span class="label">Nomor Rekening:</span></p>
+      <input id="rekening" type="text" value="008001002590564" readonly>
+    </div>
     <button onclick="copyRekening()">Salin Nomor Rekening</button>
-    <p class="success" id="notif"></p>
+    <div class="notif" id="notif"></div>
     <div class="note">
-      📌 Setelah isi ulang selesai, kirimkan bukti transaksi kepada saya.  
-      Jika belum melakukan pembayaran dalam 10 menit, harap konfirmasi karena nomor rekening bisa berubah.
+      Setelah isi ulang sebesar <strong>Rp150.000</strong>, harap kirimkan bukti transaksi.<br>
+      Jika belum melakukan pembayaran dalam <strong>10 menit</strong>, harap konfirmasi terlebih dahulu karena nomor rekening dapat berubah sewaktu-waktu.
     </div>
   </div>
 
   <script>
     function copyRekening() {
-      var copyText = document.getElementById("rekening");
-      copyText.select();
-      copyText.setSelectionRange(0, 99999); // Untuk mobile
+      const inp = document.getElementById("rekening");
+      inp.select();
+      inp.setSelectionRange(0, 99999);
       document.execCommand("copy");
-
       document.getElementById("notif").textContent = "✅ Nomor rekening berhasil disalin!";
     }
   </script>
-
 </body>
 </html>
-
-
-
