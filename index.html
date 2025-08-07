@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
-<html lang="id">
-<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Informasi Pembayaran</title>
@@ -27,12 +20,16 @@
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       border-top: 5px solid #a71d2a;
-      width: 380px;
+      width: 400px;
       text-align: center;
     }
     .logo img {
       max-width: 180px;
       margin-bottom: 16px;
+    }
+    .bank-logo {
+      width: 100px;
+      margin-bottom: 10px;
     }
     h1 {
       color: #a71d2a;
@@ -81,14 +78,20 @@
 <body>
   <div class="card">
     <div class="logo">
-      <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Nama Perusahaan">
+      <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Validus Capital">
     </div>
+    <img class="bank-logo" src="https://bri.co.id/o/bri-corporate-theme/images/bri-logo.png" alt="Logo BRI">
     <h1>Informasi Pembayaran</h1>
-    
+
     <div class="field">
       <label for="rek">Nomor Rekening</label>
       <input id="rek" value="008001002590564" readonly />
       <button onclick="salinRek()">Salin Nomor Rekening</button>
+    </div>
+
+    <div class="field">
+      <label>Nama Rekening</label>
+      <input value="RIZAL SAPUTRA" readonly />
     </div>
 
     <div class="field">
@@ -106,31 +109,27 @@
     function salinRek() {
       const copyText = document.getElementById("rek");
       copyText.select();
+      copyText.setSelectionRange(0, 99999);
       document.execCommand("copy");
       alert("✅ Nomor rekening berhasil disalin");
     }
 
     function formatRupiah(input) {
-      let angka = input.value.replace(/[^,\d]/g, '');
-      let split = angka.split(',');
-      let sisa = split[0].length % 3;
-      let rupiah = split[0].substr(0, sisa);
-      let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+      let angka = input.value.replace(/[^\d]/g, '');
+      let number_string = angka.replace(/[^,\d]/g, '').toString(),
+        split = number_string.split(','),
+        sisa = split[0].length % 3,
+        rupiah = split[0].substr(0, sisa),
+        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
       if (ribuan) {
         let separator = sisa ? '.' : '';
         rupiah += separator + ribuan.join('.');
       }
 
-      rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+      rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
       input.value = 'Rp ' + rupiah;
     }
   </script>
 </body>
 </html>
-
-
-
-
-
-
