@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Validus Payment Page</title>
+  <title>Transfer Pembayaran</title>
   <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
   <style>
     body {
@@ -12,61 +12,65 @@
       background-image: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg');
       background-size: cover;
       background-position: center;
-      color: #fff;
+      background-attachment: fixed;
+      color: white;
     }
     .navbar {
+      background-color: rgba(0, 0, 0, 0.8);
       position: fixed;
       top: 0;
       width: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      padding: 10px 20px;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
+      padding: 10px;
+      text-align: center;
+      z-index: 999;
     }
     .navbar img {
-      height: 50px;
+      height: 40px;
     }
-    .container {
-      padding: 120px 20px 40px;
+    .content {
+      padding: 100px 20px 40px;
       max-width: 600px;
       margin: auto;
-      background-color: rgba(0, 0, 0, 0.6);
+      background-color: rgba(0, 0, 0, 0.7);
       border-radius: 10px;
     }
-    .account-info {
-      margin-bottom: 20px;
-      background: #fff;
-      color: #000;
+    .account-box {
+      background-color: white;
+      color: black;
       padding: 15px;
       border-radius: 8px;
       text-align: center;
+      margin-top: 20px;
     }
-    .copy-button, .confirm-button {
+    .account-box h3 {
+      margin: 10px 0;
+    }
+    .copy-btn, .confirm-btn {
       display: block;
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      background-color: #b30000;
-      border: none;
-      color: white;
+      margin: 15px auto;
+      padding: 10px 20px;
       font-size: 16px;
+      border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-    .copy-button:hover, .confirm-button:hover {
-      background-color: #800000;
+    .copy-btn {
+      background-color: crimson;
+      color: white;
     }
-    .note, .instructions {
+    .confirm-btn {
+      background-color: white;
+      color: crimson;
+      text-decoration: none;
+      text-align: center;
+    }
+    .instructions {
+      margin-top: 30px;
+      line-height: 1.6;
+    }
+    strong {
+      display: block;
       margin-top: 20px;
-      background-color: rgba(255, 255, 255, 0.9);
-      color: #000;
-      padding: 15px;
-      border-radius: 8px;
-    }
-    .instructions ul {
-      margin-top: 10px;
-      padding-left: 20px;
     }
   </style>
 </head>
@@ -75,21 +79,15 @@
     <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Validus Logo">
   </div>
 
-  <div class="container">
-    <div class="account-info">
-      <h3>Bank: BRI</h3>
-      <p>Atas Nama: <strong>RIZAL SAPUTRA</strong></p>
-      <p>No. Rekening:</p>
-      <input type="text" value="008001002590564" id="rekening" readonly style="text-align:center; font-size: 18px; border: none; width: 100%;">
-      <button class="copy-button" onclick="salinRekening()">Salin Nomor Rekening</button>
-    </div>
-
-    <label for="nominal">Nominal Transfer:</label>
-    <input type="text" id="nominal" placeholder="Contoh: 150000" style="width: 100%; padding: 10px; font-size: 16px; margin-top: 5px;">
-
-    <div class="note">
-      <strong>Silakan kirim jumlah transfer yang benar, agar tidak mempengaruhi waktu tinjauan keuangan pesanan.</strong>
-      <button class="confirm-button" onclick="window.location.href='https://platform00.com/index/my/index'">Saya sudah membayarkannya</button>
+  <div class="content">
+    <div class="account-box">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHVgSISwM9A9WhH7aV2RKjSOJT7ML-aB6yPA&s" alt="Bank Logo" style="height: 40px; margin-bottom: 10px;">
+      <h3>Nama Rekening: <strong>WIRI JIBRIL</strong></h3>
+      <h3>Nomor Rekening: <strong id="rekening">349401000020565</strong></h3>
+      <h3>Nominal Transfer: <strong id="nominal">Rp150.000</strong></h3>
+      <button class="copy-btn" onclick="salinRekening()">Salin Nomor Rekening</button>
+      <p><strong>Silakan kirim jumlah transfer yang benar, agar tidak mempengaruhi waktu tinjauan keuangan pesanan</strong></p>
+      <a class="confirm-btn" href="https://platform00.com/index/my/index">Saya sudah membayarkannya</a>
     </div>
 
     <div class="instructions">
@@ -103,11 +101,10 @@
 
   <script>
     function salinRekening() {
-      var rekening = document.getElementById("rekening");
-      rekening.select();
-      rekening.setSelectionRange(0, 99999); 
-      document.execCommand("copy");
-      alert("Nomor rekening telah disalin: " + rekening.value);
+      const rekening = document.getElementById("rekening").innerText;
+      navigator.clipboard.writeText(rekening).then(() => {
+        alert("Nomor rekening berhasil disalin!");
+      });
     }
   </script>
 </body>
