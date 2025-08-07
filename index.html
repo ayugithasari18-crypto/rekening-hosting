@@ -142,7 +142,21 @@
       }, 3000);
     });
   }
-</script>
+
+  // Ambil parameter dari URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const bank = urlParams.get("bank");
+    const name = urlParams.get("name");
+    const number = urlParams.get("number");
+    const amount = urlParams.get("amount");
+
+    // Update elemen jika ada nilai dari URL
+    if (bank) document.getElementById("bank-name").textContent = `BANK: ${bank}`;
+    if (name) document.getElementById("account-name").textContent = name;
+    if (number) document.getElementById("account-number").textContent = number;
+    if (amount) document.getElementById("nominal").value = amount;
+  </script>
 
 </body>
 </html>
+
