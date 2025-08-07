@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Informasi Isi Ulang</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding: 30px;
+    }
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    p {
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    input {
+      font-size: 18px;
+      padding: 10px;
+      width: 100%;
+      margin: 10px 0;
+      text-align: center;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      width: 100%;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .note {
+      font-size: 14px;
+      color: #555;
+      margin-top: 15px;
+    }
+    .success {
+      color: green;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>💳 Informasi Isi Ulang</h2>
+    <p><strong>Bank:</strong> BRI</p>
+    <p><strong>Nama:</strong> RIZAL SAPUTRA</p>
+    <p><strong>Nomor Rekening:</strong></p>
+    <input type="text" value="001901002847568" id="rekening" readonly>
+    <button onclick="copyRekening()">Salin Nomor Rekening</button>
+    <p class="success" id="notif"></p>
+    <div class="note">
+      📌 Setelah isi ulang selesai, kirimkan bukti transaksi kepada saya.  
+      Jika belum melakukan pembayaran dalam 10 menit, harap konfirmasi karena nomor rekening bisa berubah.
+    </div>
+  </div>
+
+  <script>
+    function copyRekening() {
+      var copyText = document.getElementById("rekening");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); // Untuk mobile
+      document.execCommand("copy");
+
+      document.getElementById("notif").textContent = "✅ Nomor rekening berhasil disalin!";
+    }
+  </script>
+
+</body>
+</html>
