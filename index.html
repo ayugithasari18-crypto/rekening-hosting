@@ -28,7 +28,7 @@
     .logo {
       display: block;
       margin: 0 auto 20px;
-      max-width: 180px;
+      max-width: 500px;
     }
     .bank-logo {
       display: block;
@@ -73,11 +73,16 @@
   </style>
 </head>
 <body>
-  <div class="overlay"></div>
-  <div class="container">
-    <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Validus Capital" class="logo">
-    <h2>Informasi Transfer</h2>
-    <img src="https://images.seeklogo.com/logo-png/38/2/bank-bri-logo-png_seeklogo-382871.png" alt="Bank BRI" style="display: block; margin: 20px auto; width: 160px; height: auto;">
+  <!-- Logo tetap di atas -->
+  <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" style="position: fixed; top: 20px; left: 20px; z-index: 999; width: 140px;">
+
+  <!-- Konten panjang -->
+  <div style="margin-top: 100px;">
+    <p>Konten halaman yang panjang...</p>
+    <p>Scroll terus...</p>
+  </div>
+    <h2>Informasi Rekening</h2>
+    <img src="https://images.seeklogo.com/logo-png/38/2/bank-bri-logo-png_seeklogo-382871.png" alt="Bank BRI" style="display: block; margin: 5px auto; width: auto; height: auto;">
     <div class="field">
       <span class="label">Nama Rekening</span>
       <div>RIZAL SAPUTRA</div>
@@ -129,6 +134,7 @@
   </script>
 </body>
 </html>
+
 
 
 
