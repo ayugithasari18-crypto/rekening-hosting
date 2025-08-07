@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -27,11 +28,16 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       border-top: 5px solid #a71d2a;
       width: 380px;
+      text-align: center;
+    }
+    .logo img {
+      max-width: 180px;
+      margin-bottom: 16px;
     }
     h1 {
       color: #a71d2a;
       font-size: 22px;
-      text-align: center;
+      margin-bottom: 16px;
     }
     .field {
       margin: 16px 0;
@@ -50,6 +56,7 @@
       font-size: 16px;
       border-radius: 6px;
       box-sizing: border-box;
+      text-align: center;
     }
     button {
       background-color: #a71d2a;
@@ -67,11 +74,15 @@
       margin-top: 16px;
       color: #333;
       line-height: 1.5;
+      text-align: left;
     }
   </style>
 </head>
 <body>
   <div class="card">
+    <div class="logo">
+      <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Nama Perusahaan">
+    </div>
     <h1>Informasi Pembayaran</h1>
     
     <div class="field">
@@ -82,7 +93,7 @@
 
     <div class="field">
       <label for="nominal">Nominal Transfer</label>
-      <input id="nominal" type="text" placeholder="Contoh: 150000" />
+      <input id="nominal" type="text" placeholder="Contoh: 150000" oninput="formatRupiah(this)" />
     </div>
 
     <div class="note">
@@ -98,9 +109,27 @@
       document.execCommand("copy");
       alert("✅ Nomor rekening berhasil disalin");
     }
+
+    function formatRupiah(input) {
+      let angka = input.value.replace(/[^,\d]/g, '');
+      let split = angka.split(',');
+      let sisa = split[0].length % 3;
+      let rupiah = split[0].substr(0, sisa);
+      let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+      if (ribuan) {
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+      }
+
+      rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+      input.value = 'Rp ' + rupiah;
+    }
   </script>
 </body>
 </html>
+
+
 
 
 
