@@ -1,115 +1,84 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Info Pembayaran</title>
-  <link rel="icon" href="favicon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Informasi Pembayaran</title>
   <style>
     body {
-      margin: 0;
-      padding: 20px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f8f9fa, #e1e2e6);
+      background: linear-gradient(135deg, #fff, #f8d7da);
+      font-family: 'Segoe UI', sans-serif;
       display: flex;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
     }
     .card {
-      background: white;
+      background-color: white;
+      padding: 24px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.10);
-      max-width: 420px;
-      width: 100%;
-      padding: 30px;
-      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-top: 5px solid #a71d2a;
+      width: 360px;
     }
     h1 {
-      font-size: 24px;
-      color: #222;
-      margin-bottom: 24px;
-    }
-    .detail {
-      text-align: left;
-      margin-bottom: 20px;
-      font-size: 16px;
-      color: #333;
-    }
-    .detail p {
-      margin: 8px 0;
-    }
-    .label {
-      font-weight: 600;
-    }
-    #rekening {
-      width: 100%;
-      padding: 12px;
-      font-size: 18px;
-      margin: 12px 0;
-      border: 1.5px solid #007bff;
-      border-radius: 6px;
-      background: #f5f9ff;
+      color: #a71d2a;
+      font-size: 22px;
       text-align: center;
-      color: #111;
+    }
+    .rekening-box {
+      margin: 16px 0;
+      text-align: center;
+    }
+    input {
+      border: 1.5px solid #a71d2a;
+      background: #fff5f6;
+      padding: 12px;
+      width: 100%;
+      font-size: 18px;
+      text-align: center;
+      border-radius: 6px;
     }
     button {
-      background: #007bff;
+      background-color: #a71d2a;
       color: white;
-      padding: 12px;
-      font-size: 16px;
-      width: 100%;
       border: none;
+      padding: 12px;
+      width: 100%;
+      font-size: 16px;
+      margin-top: 12px;
       border-radius: 6px;
       cursor: pointer;
     }
-    button:hover {
-      background: #0056b3;
-    }
-    .notif {
-      margin-top: 12px;
-      color: green;
-      font-size: 14px;
-    }
     .note {
-      text-align: left;
-      font-size: 14px;
-      color: #555;
-      margin-top: 20px;
-      line-height: 1.4;
+      font-size: 13px;
+      margin-top: 16px;
+      color: #333;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>💳 Informasi Pembayaran</h1>
-    <div class="detail">
-      <p><span class="label">Bank:</span> BRI</p>
-      <p><span class="label">Nama Penerima:</span> RAMDANI</p>
-      <p><span class="label">Nomor Rekening:</span></p>
-      <input id="rekening" type="text" value="008001002590564" readonly>
+    <h1>Informasi Pembayaran</h1>
+    <div class="rekening-box">
+      <p>Bank: <strong>BRI</strong></p>
+      <p>Nama: <strong>RAMDANI</strong></p>
+      <input id="rek" value="008001002590564" readonly />
+      <button onclick="salinRek()">Salin Nomor Rekening</button>
     </div>
-    <button onclick="copyRekening()">Salin Nomor Rekening</button>
-    <div class="notif" id="notif"></div>
     <div class="note">
-      Setelah isi ulang sebesar <strong>Rp150.000</strong>, harap kirimkan bukti transaksi.<br>
-      Jika belum melakukan pembayaran dalam <strong>10 menit</strong>, harap konfirmasi terlebih dahulu karena nomor rekening dapat berubah sewaktu-waktu.
+      Harap transfer sebesar <strong>Rp150.000</strong> ke nomor rekening di atas. Setelah transfer, kirimkan bukti pembayaran.<br><br>
+      Jika dalam 10 menit belum melakukan pembayaran, konfirmasi terlebih dahulu karena rekening bisa berubah sewaktu-waktu.
     </div>
   </div>
 
   <script>
-    function copyRekening() {
-      const inp = document.getElementById("rekening");
-      inp.select();
-      inp.setSelectionRange(0, 99999);
+    function salinRek() {
+      const copyText = document.getElementById("rek");
+      copyText.select();
       document.execCommand("copy");
-      document.getElementById("notif").textContent = "✅ Nomor rekening berhasil disalin!";
+      alert("✅ Nomor rekening berhasil disalin");
     }
   </script>
 </body>
