@@ -3,57 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transfer Bank</title>
+  <title>Transfer Pembayaran</title>
   <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
   <style>
-    body {
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
       font-family: Arial, sans-serif;
-      color: #fff;
+    }
+    body {
       background: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg') no-repeat center center fixed;
       background-size: cover;
+      color: #fff;
+      padding-top: 80px;
     }
-    .navbar {
-      background-color: rgba(0, 0, 0, 0.7);
-      padding: 10px 20px;
+    header {
+      background-color: rgba(0, 0, 0, 0.8);
       position: fixed;
-      width: 100%;
       top: 0;
+      left: 0;
+      width: 100%;
       z-index: 1000;
+      padding: 10px 20px;
       display: flex;
       align-items: center;
+      justify-content: center;
     }
-    .navbar img {
+    header img {
       height: 40px;
     }
     .container {
-      margin-top: 100px;
-      background-color: rgba(0, 0, 0, 0.6);
-      padding: 30px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+      max-width: 480px;
+      margin: 40px auto;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 20px;
       border-radius: 10px;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    button {
-      padding: 10px 20px;
-      background-color: #b30000;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #cc0000;
     }
     .bank-logo {
       display: block;
@@ -61,49 +46,103 @@
       width: 160px;
       height: auto;
     }
-    .note, .instruction {
-      margin-top: 20px;
+    .rekening-info {
+      text-align: center;
+      margin-bottom: 20px;
     }
-    strong {
+    .rekening-info strong {
+      display: block;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    .rekening-number {
+      font-weight: bold;
+      font-size: 20px;
+      margin: 10px 0;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #d32f2f;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
       font-weight: bold;
     }
-    ul {
-      padding-left: 20px;
+    .btn:hover {
+      background-color: #b71c1c;
+    }
+    #copy-success {
+      display: none;
+      background-color: #4CAF50;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      margin-bottom: 10px;
+      resize: none;
+    }
+    p, li {
+      font-size: 14px;
+      margin-bottom: 10px;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
-  <div class="navbar">
-    <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Logo Validus">
+
+<header>
+  <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Logo Validus">
+</header>
+
+<div class="container">
+  <img class="bank-logo" src="https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg" alt="Logo Bank BRI">
+
+  <div class="rekening-info">
+    <strong>Nama Rekening:</strong>
+    <div><strong>WIRI JIBRIL</strong></div>
+    <strong>Nomor Rekening:</strong>
+    <div class="rekening-number" id="rekening">349401000020565</div>
+    <button class="btn" onclick="copyRekening()">Salin Nomor Rekening</button>
+    <div id="copy-success">✔️ Berhasil menyalin nomor rekening</div>
   </div>
 
-  <div class="container">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHVgSISwM9A9WhH7aV2RKjSOJT7ML-aB6yPA&s" alt="Bank Logo" class="bank-logo">
+  <label for="nominal"><strong>Nominal Transfer (IDR)</strong></label>
+  <textarea id="nominal" rows="1" placeholder="Ketik nominal transfer..."></textarea>
 
-    <label for="amount">Nominal Transfer (Rp)</label>
-    <input type="text" id="amount" placeholder="Masukkan nominal transfer">
+  <p><strong>Silakan kirim jumlah transfer yang benar, agar tidak mempengaruhi waktu tinjauan keuangan pesanan</strong></p>
 
-    <p class="note"><strong>Silakan kirim jumlah transfer yang benar, agar tidak mempengaruhi waktu tinjauan keuangan pesanan.</strong></p>
+  <a href="https://platform00.com/index/my/index" class="btn">Saya sudah membayarkannya</a>
 
-    <button onclick="window.location.href='https://platform00.com/index/my/index'">Saya sudah membayarnya</button>
+  <p><strong>Petunjuk：</strong></p>
+  <ul>
+    <li>Untuk transfer, silakan klik "Salin nomor rekening", dan buka online banking, mobile banking, atau ATM untuk menyelesaikan transfer dan mengisi ulang.</li>
+    <li>Setelah proses isi ulang telah dilakukan, kirimkan bukti transaksi yang berhasil kepada mentor/guru. Apabila dalam rentang waktu 15–20 menit belum melakukan pembayaran, harap refresh halaman terlebih dahulu, karena nomor rekening dapat berubah sewaktu-waktu.</li>
+  </ul>
+</div>
 
-    <div class="instruction">
-      <p><strong>Petunjuk：</strong></p>
-      <ul>
-        <li>Untuk transfer, silakan klik "Salin nomor rekening", dan buka online banking, mobile banking, atau ATM untuk menyelesaikan transfer dan mengisi ulang.</li>
-        <li>Setelah proses isi ulang telah dilakukan, kirimkan bukti transaksi yang berhasil kepada mentor/guru. Apabila dalam rentang waktu 15–20 menit belum melakukan pembayaran, harap refresh halaman terlebih dahulu, karena nomor rekening dapat berubah sewaktu-waktu.</li>
-      </ul>
-    </div>
-  </div>
+<script>
+  function copyRekening() {
+    const rekening = document.getElementById("rekening").innerText;
+    navigator.clipboard.writeText(rekening).then(() => {
+      const notif = document.getElementById("copy-success");
+      notif.style.display = 'block';
+      setTimeout(() => {
+        notif.style.display = 'none';
+      }, 3000);
+    });
+  }
+</script>
 
-  <script>
-    // Auto-fill amount if URL has ?amount=
-    const params = new URLSearchParams(window.location.search);
-    const amount = params.get('amount');
-    if (amount) {
-      const formatted = parseInt(amount).toLocaleString('id-ID');
-      document.getElementById('amount').value = formatted;
-    }
-  </script>
 </body>
 </html>
