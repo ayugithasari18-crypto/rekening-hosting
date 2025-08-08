@@ -148,9 +148,23 @@
     });
   }
 
-  function formatAmount(input) {
-    let number = input.value.replace(/[^0-9]/g, '');
-    input.value = Number(number).toLocaleString('id-ID');
+  function copyText(id) {
+    const el = document.getElementById(id);
+    let text;
+
+    if (id === 'amount') {
+      text = el.getAttribute('data-raw') || el.value.replace(/[^\d]/g, '');
+    } else {
+      text = el.innerText;
+    }
+
+    navigator.clipboard.writeText(text).then(() => {
+      const notif = document.getElementById(`copy-${id}-success`);
+      notif.style.display = 'block';
+      setTimeout(() => {
+        notif.style.display = 'none';
+      }, 3000);
+    });
   }
 
   // Ambil data dari URL
@@ -163,8 +177,13 @@
 
   if (name) document.getElementById('name').innerText = name;
   if (number) document.getElementById('number').innerText = number;
-  if (amount) document.getElementById('amount').value = Number(amount).toLocaleString('id-ID');
+  if (amount) {
+    const el = document.getElementById('amount');
+    el.value = 'Rp ' + Number(amount).toLocaleString('id-ID');
+    el.setAttribute('data-raw', amount);
+  }
 </script>
 
 </body>
 </html>
+
