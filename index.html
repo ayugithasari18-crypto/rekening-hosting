@@ -1,17 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Transfer Pembayaran</title>
   <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
     body {
       background: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg') no-repeat center center fixed;
       background-size: cover;
@@ -21,8 +16,7 @@
     header {
       background-color: rgba(0, 0, 0, 0.8);
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       z-index: 1000;
       padding: 10px 20px;
@@ -30,9 +24,7 @@
       align-items: center;
       justify-content: center;
     }
-    header img {
-      height: 40px;
-    }
+    header img { height: 40px; }
     .container {
       max-width: 480px;
       margin: 40px auto;
@@ -44,7 +36,6 @@
       display: block;
       margin: 20px auto;
       width: 160px;
-      height: auto;
     }
     .rekening-info {
       text-align: center;
@@ -72,10 +63,8 @@
       cursor: pointer;
       font-weight: bold;
     }
-    .btn:hover {
-      background-color: #b71c1c;
-    }
-    #copy-success, #notif-amount {
+    .btn:hover { background-color: #b71c1c; }
+    .notif {
       display: none;
       background-color: #4CAF50;
       color: white;
@@ -110,66 +99,65 @@
 
   <div class="rekening-info">
     <strong>Nama Rekening:</strong>
-    <div><strong>FERDIANSYAH</strong></div>
+    <div><strong id="account-name">FERDIANSYAH</strong></div>
     <strong>Nomor Rekening:</strong>
-    <div class="rekening-number" id="rekening">116601000723562</div>
-    <button class="btn" onclick="copyRekening()">Salin Nomor Rekening</button>
-    <div id="copy-success">✔️ Berhasil menyalin nomor rekening</div>
+    <div class="rekening-number" id="account-number">116601000723562</div>
+    <button class="btn" onclick="copyText('account-number')">Salin Nomor Rekening</button>
+    <div class="notif" id="notif-rekening">✔️ Berhasil menyalin nomor rekening</div>
   </div>
 
-  <div class="rekening-info">
-    <strong>Jumlah Transfer (Rp):</strong>
-    <input type="text" id="nominal" placeholder="Contoh: 1500000" oninput="formatNominal()">
-    <div id="formatted-nominal" style="margin-top: 10px; font-size: 18px; font-weight: bold;">Rp 0</div>
-    <button class="btn" onclick="copyAmount()">Salin Jumlah Transfer</button>
-    <div id="notif-amount">✅ Berhasil menyalin jumlah transfer</div>
-  </div>
+  <strong>Jumlah Transfer:</strong>
+  <input type="text" id="amount-input" placeholder="Contoh: 1500000" oninput="formatCurrency(this)">
+  <button class="btn" onclick="copyAmount()">Salin Jumlah Transfer</button>
+  <div class="notif" id="notif-amount">✅ Berhasil menyalin jumlah transfer</div>
 
-  <p><strong>Silakan kirim jumlah transfer yang benar, agar tidak mempengaruhi waktu tinjauan keuangan pesanan</strong></p>
   <a href="https://platform00.com/index/my/index" class="btn">Saya sudah membayarkannya</a>
 
   <p><strong>Petunjuk：</strong></p>
   <ul>
-    <li>Untuk transfer, silakan klik "Salin nomor rekening", lalu buka mobile banking atau ATM untuk menyelesaikan transfer.</li>
-    <li>Setelah transfer selesai, kirimkan bukti transaksi kepada mentor/guru. Jika dalam 15–20 menit belum membayar, harap refresh halaman karena nomor rekening bisa berubah.</li>
+    <li>Untuk transfer, silakan klik "Salin nomor rekening", dan buka online banking, mobile banking, atau ATM.</li>
+    <li>Setelah isi ulang, kirimkan bukti ke mentor. Jika dalam 15–20 menit belum bayar, harap refresh halaman.</li>
   </ul>
 </div>
 
 <script>
-  function copyRekening() {
-    const rekening = document.getElementById("rekening").innerText;
-    navigator.clipboard.writeText(rekening).then(() => {
-      const notif = document.getElementById("copy-success");
-      notif.style.display = 'block';
+  // Format angka menjadi format Rupiah saat diketik
+  function formatCurrency(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (!value) {
+      input.value = '';
+      return;
+    }
+    input.value = 'Rp' + parseInt(value, 10).toLocaleString('id-ID');
+  }
+
+  function copyText(elementId) {
+    const text = document.getElementById(elementId).innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      document.getElementById('notif-rekening').style.display = 'block';
       setTimeout(() => {
-        notif.style.display = 'none';
+        document.getElementById('notif-rekening').style.display = 'none';
       }, 3000);
     });
   }
 
-  function formatNominal() {
-    const input = document.getElementById("nominal");
-    const output = document.getElementById("formatted-nominal");
-    const raw = input.value.replace(/[^\d]/g, ""); // hapus semua selain angka
-
-    const formatted = new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0
-    }).format(raw || 0);
-
-    output.innerText = formatted;
-  }
-
   function copyAmount() {
-    const formatted = document.getElementById("formatted-nominal").innerText;
-    navigator.clipboard.writeText(formatted).then(() => {
+    const input = document.getElementById('amount-input');
+    const value = input.value;
+    if (!value) return;
+    navigator.clipboard.writeText(value).then(() => {
       document.getElementById('notif-amount').style.display = 'block';
       setTimeout(() => {
         document.getElementById('notif-amount').style.display = 'none';
       }, 3000);
     });
   }
+
+  // Ambil data dari parameter URL jika tersedia
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("name")) document.getElementById("account-name").textContent = params.get("name");
+  if (params.get("number")) document.getElementById("account-number").textContent = params.get("number");
+  if (params.get("amount")) document.getElementById("amount-input").value = 'Rp' + parseInt(params.get("amount")).toLocaleString('id-ID');
 </script>
 
 </body>
