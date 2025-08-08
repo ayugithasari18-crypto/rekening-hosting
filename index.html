@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Transfer Pembayaran</title>
   <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
   <style>
@@ -75,7 +75,7 @@
     .btn:hover {
       background-color: #b71c1c;
     }
-    #copy-success {
+    #copy-success, #notif-amount {
       display: none;
       background-color: #4CAF50;
       color: white;
@@ -84,13 +84,13 @@
       border-radius: 5px;
       margin-top: 10px;
     }
-    textarea {
+    input[type="text"] {
       width: 100%;
       padding: 10px;
       border-radius: 5px;
       border: none;
-      margin-bottom: 10px;
-      resize: none;
+      margin-top: 10px;
+      font-size: 16px;
     }
     p, li {
       font-size: 14px;
@@ -110,47 +110,32 @@
 
   <div class="rekening-info">
     <strong>Nama Rekening:</strong>
-    <div><strong>FERDIANSYAH </strong></div>
+    <div><strong>FERDIANSYAH</strong></div>
     <strong>Nomor Rekening:</strong>
     <div class="rekening-number" id="rekening">116601000723562</div>
     <button class="btn" onclick="copyRekening()">Salin Nomor Rekening</button>
     <div id="copy-success">✔️ Berhasil menyalin nomor rekening</div>
   </div>
 
-  <div class="info-label">JUMLAH TRANSFER</div>
-<div id="amount" class="info-value">-</div>
+  <div class="rekening-info">
+    <strong>Jumlah Transfer (Rp):</strong>
+    <input type="text" id="nominal" placeholder="Contoh: 1500000" oninput="formatNominal()">
+    <div id="formatted-nominal" style="margin-top: 10px; font-size: 18px; font-weight: bold;">Rp 0</div>
+    <button class="btn" onclick="copyAmount()">Salin Jumlah Transfer</button>
+    <div id="notif-amount">✅ Berhasil menyalin jumlah transfer</div>
+  </div>
 
-<button class="btn" onclick="copyAmount()">Salin Jumlah Transfer</button>
-<div class="notif" id="notif-amount">✅ Berhasil menyalin jumlah transfer</div>
   <p><strong>Silakan kirim jumlah transfer yang benar, agar tidak mempengaruhi waktu tinjauan keuangan pesanan</strong></p>
-
   <a href="https://platform00.com/index/my/index" class="btn">Saya sudah membayarkannya</a>
 
   <p><strong>Petunjuk：</strong></p>
   <ul>
-    <li>Untuk transfer, silakan klik "Salin nomor rekening", dan buka online banking, mobile banking, atau ATM untuk menyelesaikan transfer dan mengisi ulang.</li>
-    <li>Setelah proses isi ulang telah dilakukan, kirimkan bukti transaksi yang berhasil kepada mentor/guru. Apabila dalam rentang waktu 15–20 menit belum melakukan pembayaran, harap refresh halaman terlebih dahulu, karena nomor rekening dapat berubah sewaktu-waktu.</li>
+    <li>Untuk transfer, silakan klik "Salin nomor rekening", lalu buka mobile banking atau ATM untuk menyelesaikan transfer.</li>
+    <li>Setelah transfer selesai, kirimkan bukti transaksi kepada mentor/guru. Jika dalam 15–20 menit belum membayar, harap refresh halaman karena nomor rekening bisa berubah.</li>
   </ul>
 </div>
 
 <script>
-   const endpoint = 'https://script.google.com/macros/s/AKfycbzZuKD0eQZ_rpsUkKoJiGYZuFDwgQpYVVt0JvCWxC2AnNiDBkejzqqNvIQ22AfdDT-y/exec';
-
-  fetch(endpoint)
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById('bank').innerText = data.bank || '-';
-      document.getElementById('name').innerText = data.name || '-';
-      document.getElementById('account').innerText = data.account || '-';
-
-      // Tambahkan di sini:
-      const nominal = 1500000 + Math.floor(Math.random() * 100); // atau pakai angka tetap
-      document.getElementById('amount').innerText = nominal.toLocaleString('id-ID');
-    })
-    .catch(err => {
-      console.error(err);
-    });
-  
   function copyRekening() {
     const rekening = document.getElementById("rekening").innerText;
     navigator.clipboard.writeText(rekening).then(() => {
@@ -162,34 +147,30 @@
     });
   }
 
-  function copyAmount() {
-  const text = document.getElementById('amount').innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    document.getElementById('notif-amount').style.display = 'block';
-    setTimeout(() => {
-      document.getElementById('notif-amount').style.display = 'none';
-    }, 3000);
-  });
-}
-  
-  // Ambil parameter dari URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const bank = urlParams.get("bank");
-    const name = urlParams.get("name");
-    const number = urlParams.get("number");
-    const amount = urlParams.get("amount");
+  function formatNominal() {
+    const input = document.getElementById("nominal");
+    const output = document.getElementById("formatted-nominal");
+    const raw = input.value.replace(/[^\d]/g, ""); // hapus semua selain angka
 
-    // Update elemen jika ada nilai dari URL
-    if (bank) document.getElementById("bank-name").textContent = `BANK: ${bank}`;
-    if (name) document.getElementById("account-name").textContent = name;
-    if (number) document.getElementById("account-number").textContent = number;
-    if (amount) document.getElementById("nominal").value = amount;
-  </script>
+    const formatted = new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    }).format(raw || 0);
+
+    output.innerText = formatted;
+  }
+
+  function copyAmount() {
+    const formatted = document.getElementById("formatted-nominal").innerText;
+    navigator.clipboard.writeText(formatted).then(() => {
+      document.getElementById('notif-amount').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('notif-amount').style.display = 'none';
+      }, 3000);
+    });
+  }
+</script>
 
 </body>
 </html>
-
-
-
-
-
