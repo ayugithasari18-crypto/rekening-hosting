@@ -113,41 +113,11 @@
 </div>
 
 <script>
-   // URL Web App Google Apps Script
-  const API_URL = "https://script.google.com/macros/s/AKfycbwh1FUnZBQ5uKVGWNRxFqe585EQ5svJKOll1O3EY128dOdNNF2oczXDVG-j8894kRZc/exec";
-
-  // Fungsi ambil data rekening dari server
-  async function loadAccountData() {
-    try {
-      const res = await fetch(API_URL);
-      const json = await res.json();
-
-      if (json.status === "sukses" && json.data) {
-        document.getElementById('name').innerText = json.data.name;
-        document.getElementById('number').innerText = json.data.number;
-
-        // Ganti logo bank sesuai data bank
-        const bankLogo = document.querySelector('.bank-logo');
-        if (json.data.bank && json.data.bank.toLowerCase().includes('bri')) {
-          bankLogo.src = "https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg";
-        } else if (json.data.bank && json.data.bank.toLowerCase().includes('bca')) {
-          bankLogo.src = "https://upload.wikimedia.org/wikipedia/commons/c/c5/BCA_logo.svg";
-        } else if (json.data.bank && json.data.bank.toLowerCase().includes('mandiri')) {
-          bankLogo.src = "https://upload.wikimedia.org/wikipedia/commons/9/9f/Bank_Mandiri_logo.svg";
-        } else {
-          bankLogo.src = "";
-        }
-      }
-    } catch (err) {
-      console.error("Gagal memuat data rekening:", err);
-    }
-  }
-
-  
-  function copyText(id) {
+function copyText(id) {
     const el = document.getElementById(id);
     let text;
     if (id === 'amount') {
+      // Salin tanpa format Rp dan titik
       text = el.value.replace(/[^\d]/g, '');
     } else {
       text = el.innerText;
@@ -161,7 +131,27 @@
     });
   }
 
-  // Ambil data dari URL
+  function formatAmount(el) {
+    // Hilangkan semua karakter kecuali angka
+    let val = el.value.replace(/[^\d]/g, '');
+    if (val === '') {
+      el.value = '';
+      return;
+    }
+    // Format dengan "Rp " dan ribuan dengan titik
+    el.value = 'Rp ' + Number(val).toLocaleString('id-ID');
+  }
+
+  function isNumberKey(evt) {
+    const charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      evt.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  // Ambil data dari URL jika ada
   const url = new URL(window.location.href);
   const params = url.searchParams;
   const name = params.get('name');
@@ -172,11 +162,45 @@
   if (number) document.getElementById('number').innerText = number;
   if (amount) {
     const el = document.getElementById('amount');
-    el.value = Number(amount).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
+    // Format amount sesuai aturan
+    let val = amount.replace(/[^\d]/g, '');
+    el.value = 'Rp ' + Number(val).toLocaleString('id-ID');
   }
+
+    // Ganti dengan URL Web App Google Apps Script kamu
+  const API_URL = "https://script.google.com/macros/s/AKfycbzOu-x4AWzlXooxv4pgdvi7rDywFSpFgkeobOQLlEBdZErJNpluPmpTSeDNT3heA58/exec";
+
+  // Fungsi ambil data rekening dari server
+  async function loadAccountData() {
+    try {
+      const res = await fetch(API_URL);
+      const json = await res.json();
+
+      if (json.status === "sukses" && json.data) {
+        document.getElementById('name').innerText = json.data.name;
+        document.getElementById('number').innerText = json.data.number;
+
+        // Ganti logo bank sesuai data bank (opsional)
+        const bankLogo = document.querySelector('.bank-logo');
+        if (json.data.bank && json.data.bank.toLowerCase().includes('bri')) {
+          bankLogo.src = "https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg";
+        } else if (json.data.bank && json.data.bank.toLowerCase().includes('bca')) {
+          bankLogo.src = "https://upload.wikimedia.org/wikipedia/commons/c/c5/BCA_logo.svg";
+        } else if (json.data.bank && json.data.bank.toLowerCase().includes('mandiri')) {
+          bankLogo.src = "https://upload.wikimedia.org/wikipedia/commons/9/9f/Bank_Mandiri_logo.svg";
+        }
+      }
+    } catch (err) {
+      console.error("Gagal memuat data rekening:", err);
+    }
+  }
+
+  // Jalankan setelah halaman siap
+  document.addEventListener('DOMContentLoaded', loadAccountData);
 </script>
 
 </body>
 </html>
+
 
 
