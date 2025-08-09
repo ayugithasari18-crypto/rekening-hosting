@@ -188,6 +188,27 @@
           }
         }
 
+        // Ambil parameter dari URL dan isi ke elemen
+  const urlParams = new URLSearchParams(window.location.search);
+
+  const paramName = urlParams.get('name');
+  const paramNumber = urlParams.get('number');
+  const paramAmount = urlParams.get('amount');
+
+  if(paramName) {
+    document.getElementById('name').innerText = paramName;
+  }
+  if(paramNumber) {
+    document.getElementById('number').innerText = paramNumber;
+  }
+  if(paramAmount) {
+    const amountInput = document.getElementById('amount');
+    const cleaned = paramAmount.replace(/[^\d]/g, '');
+    if(cleaned) {
+      amountInput.value = 'Rp ' + Number(cleaned).toLocaleString('id-ID');
+    }
+  }
+
         document.getElementById('loading').style.display = 'none';
         document.getElementById('container').style.display = 'block';
       } else {
@@ -204,3 +225,4 @@
 
 </body>
 </html>
+
