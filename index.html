@@ -192,6 +192,7 @@ function copyText(id) {
           bankLogo.src = "https://www.sinarmas.com/blog/wp-content/uploads/2016/10/cropped-sm-logo-2.png";
           } else if (json.data.bank && json.data.bank.toLowerCase().includes('cimb')) {
           bankLogo.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/CIMB_Niaga_logo.svg/330px-CIMB_Niaga_logo.svg.png";
+        }
       }
     } catch (err) {
       console.error("Gagal memuat data rekening:", err);
@@ -204,6 +205,7 @@ function copyText(id) {
 
 </body>
 </html>
+
 
 
 
