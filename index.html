@@ -2,108 +2,85 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Transfer Pembayaran</title>
-  <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
-
+  <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico" />
   <style>
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0; padding: 0; box-sizing: border-box;
       font-family: Arial, sans-serif;
     }
-
     body {
       background: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg') no-repeat center center fixed;
       background-size: cover;
       color: #fff;
       padding-top: 80px;
+      min-height: 100vh;
     }
-
     header {
       background-color: rgba(0, 0, 0, 0.8);
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      z-index: 1000;
-      padding: 10px 20px;
-      display: flex;
-      justify-content: center;
+      position: fixed; top: 0; left: 0; width: 100%;
+      z-index: 1000; padding: 10px 20px;
+      display: flex; justify-content: center;
     }
-
-    header img {
-      height: 40px;
+    header img { height: 40px; }
+    #loading {
+      text-align: center;
+      margin-top: 120px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
     }
-
     .container {
       max-width: 480px;
       margin: 40px auto;
       background: rgba(0, 0, 0, 0.7);
-      padding: 20px;
-      border-radius: 10px;
+      padding: 20px; border-radius: 10px;
+      display: none;
     }
-
     .bank-logo {
-      display: block;
-      margin: 20px auto;
+      display: block; margin: 20px auto;
       width: 160px;
     }
-
     .rekening-info {
       text-align: center;
       margin-bottom: 20px;
     }
-
     .rekening-info strong {
-      display: block;
-      font-size: 16px;
+      display: block; font-size: 16px;
       margin-top: 10px;
     }
-
     .rekening-number {
-      font-weight: bold;
-      font-size: 20px;
+      font-weight: bold; font-size: 20px;
       margin: 10px 0;
     }
-
     .btn {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
+      display: block; width: 100%;
+      padding: 10px; margin: 10px 0;
       background-color: #d32f2f;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      color: #fff; border: none;
+      border-radius: 5px; cursor: pointer;
       font-weight: bold;
     }
-
-    .btn:hover {
-      background-color: #b71c1c;
-    }
-
+    .btn:hover { background-color: #b71c1c; }
     .success {
       display: none;
       background-color: #4CAF50;
-      color: white;
-      text-align: center;
+      color: white; text-align: center;
       padding: 10px;
       border-radius: 5px;
       margin-top: 10px;
     }
-
     input[type="text"] {
-      width: 100%;
-      padding: 10px;
+      width: 100%; padding: 10px;
       border-radius: 5px;
       border: none;
       font-size: 16px;
       text-align: center;
       margin-top: 5px;
+      color: #000;
+      font-weight: bold;
     }
-
     ul, p {
       font-size: 14px;
       margin-top: 10px;
@@ -116,11 +93,11 @@
   <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Logo Validus">
 </header>
 
-<div class="container">
-  <!-- Logo Bank -->
-  <img class="bank-logo" src="https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg" alt="Logo Bank BRI">
+<div id="loading">Memuat data rekening...</div>
 
-  <!-- Data Rekening -->
+<div class="container" id="container">
+  <img class="bank-logo" src="https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg" alt="Logo Bank">
+
   <div class="rekening-info">
     <strong>Nama Rekening:</strong>
     <div id="name">-</div>
@@ -131,18 +108,15 @@
     <div class="success" id="copy-number-success">✅ Nomor rekening berhasil disalin</div>
   </div>
 
-  <!-- Jumlah Transfer -->
   <div class="rekening-info">
     <strong>Jumlah Transfer (Rp):</strong>
-    <input type="text" id="amount" placeholder="Misal: 1500000" oninput="formatAmount(this)">
+    <input type="text" id="amount" placeholder="Misal: 1500000" oninput="formatAmount(this)" onkeypress="return isNumberKey(event)">
     <button class="btn" onclick="copyText('amount')">Salin Jumlah Transfer</button>
     <div class="success" id="copy-amount-success">✅ Jumlah transfer berhasil disalin</div>
   </div>
 
-  <!-- Tombol Konfirmasi -->
   <a href="https://platform00.com/index/my/index" class="btn">Saya sudah membayarkannya</a>
 
-  <!-- Petunjuk -->
   <p><strong>Petunjuk：</strong></p>
   <ul>
     <li>Klik "Salin nomor rekening" lalu buka mobile banking atau ATM.</li>
@@ -152,18 +126,16 @@
 </div>
 
 <script>
-  // Fungsi menyalin teks
+  const API_URL = "https://script.google.com/macros/s/AKfycbzOu-x4AWzlXooxv4pgdvi7rDywFSpFgkeobOQLlEBdZErJNpluPmpTSeDNT3heA58/exec";
+
   function copyText(id) {
     const el = document.getElementById(id);
     let text;
-
     if (id === 'amount') {
-      // Salin angka saja
       text = el.value.replace(/[^\d]/g, '');
     } else {
       text = el.innerText;
     }
-
     navigator.clipboard.writeText(text).then(() => {
       const notif = document.getElementById(`copy-${id}-success`);
       notif.style.display = 'block';
@@ -173,7 +145,6 @@
     });
   }
 
-  // Format input jumlah transfer
   function formatAmount(el) {
     let val = el.value.replace(/[^\d]/g, '');
     if (val === '') {
@@ -183,7 +154,6 @@
     el.value = 'Rp ' + Number(val).toLocaleString('id-ID');
   }
 
-  // Cegah input non-angka
   function isNumberKey(evt) {
     const charCode = (evt.which) ? evt.which : evt.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -193,25 +163,6 @@
     return true;
   }
 
-  // Ambil parameter dari URL jika ada
-  const url = new URL(window.location.href);
-  const params = url.searchParams;
-  const name = params.get('name');
-  const number = params.get('number');
-  const amount = params.get('amount');
-
-  if (name) document.getElementById('name').innerText = name;
-  if (number) document.getElementById('number').innerText = number;
-  if (amount) {
-    const el = document.getElementById('amount');
-    let val = amount.replace(/[^\d]/g, '');
-    el.value = 'Rp ' + Number(val).toLocaleString('id-ID');
-  }
-
-  // URL Web App Google Apps Script
-  const API_URL = "https://script.google.com/macros/s/AKfycbzOu-x4AWzlXooxv4pgdvi7rDywFSpFgkeobOQLlEBdZErJNpluPmpTSeDNT3heA58/exec";
-
-  // Fungsi ambil data rekening dari server
   async function loadAccountData() {
     try {
       const res = await fetch(API_URL);
@@ -221,29 +172,33 @@
         document.getElementById('name').innerText = json.data.name;
         document.getElementById('number').innerText = json.data.number;
 
-        // Ganti logo bank sesuai data
         const bankLogo = document.querySelector('.bank-logo');
         if (json.data.bank) {
-          const bankName = json.data.bank.toLowerCase();
-          if (bankName.includes('bri')) {
+          const bank = json.data.bank.toLowerCase();
+          if (bank.includes('bri')) {
             bankLogo.src = "https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg";
-          } else if (bankName.includes('bca')) {
+          } else if (bank.includes('bca')) {
             bankLogo.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/330px-Bank_Central_Asia.svg.png";
-          } else if (bankName.includes('danamon')) {
+          } else if (bank.includes('danamon')) {
             bankLogo.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Danamon.svg/330px-Danamon.svg.png";
-          } else if (bankName.includes('sinarmas')) {
+          } else if (bank.includes('sinarmas')) {
             bankLogo.src = "https://www.sinarmas.com/blog/wp-content/uploads/2016/10/cropped-sm-logo-2.png";
-          } else if (bankName.includes('cimb')) {
+          } else if (bank.includes('cimb')) {
             bankLogo.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/CIMB_Niaga_logo.svg/330px-CIMB_Niaga_logo.svg.png";
           }
         }
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('container').style.display = 'block';
+      } else {
+        document.getElementById('loading').innerText = 'Gagal memuat data rekening.';
       }
     } catch (err) {
       console.error("Gagal memuat data rekening:", err);
+      document.getElementById('loading').innerText = 'Terjadi kesalahan saat memuat data.';
     }
   }
 
-  // Jalankan setelah halaman siap
   document.addEventListener('DOMContentLoaded', loadAccountData);
 </script>
 
