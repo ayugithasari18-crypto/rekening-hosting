@@ -8,7 +8,7 @@
   <style>
     :root{
       --bg:#0f1720; /* dark default */
-      --card: rgba(255,255,255,0.04);
+      --card: rgba(255,255,255,0.1);
       --text:#e6eef8;
       --accent:#102e58;
       --muted:rgba(230,238,248,0.7);
@@ -25,13 +25,36 @@
       --glass: rgba(16,46,88,0.04);
     }
     html,body{height:100%; margin:0; font-family:Inter, Arial, sans-serif; background:var(--bg); color:var(--text);}
+
+    /* Background image + blur overlay container */
     .page {
+      position: relative;
       min-height:100vh;
-      background-image: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg');
-      background-size:cover;
-      background-position:center;
       padding:88px 16px 48px;
       box-sizing:border-box;
+      overflow: hidden;
+    }
+    /* background image */
+    .page::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg');
+      background-size: cover;
+      background-position: center;
+      z-index: -2;
+      filter: brightness(0.75);
+    }
+    /* blur overlay */
+    .page::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      backdrop-filter: blur(8px);
+      background-color: rgba(15, 23, 32, 0.4);
+      z-index: -1;
+      pointer-events: none;
+      transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
     }
 
     header{
@@ -64,6 +87,8 @@
     .card {
       max-width:520px; margin:40px auto; background:var(--card); border-radius:12px; padding:24px;
       box-shadow: 0 10px 30px rgba(2,6,23,0.5); backdrop-filter: blur(6px);
+      color: var(--text);
+      display:none; /* sembunyi dulu sampai data siap */
     }
     .bank-logo{display:block; margin:8px auto 18px; width:160px; height:auto; object-fit:contain;}
     .section { text-align:center; margin-bottom:18px; }
@@ -110,7 +135,7 @@
   </header>
 
   <main class="page" id="pageRoot">
-    <div id="loadingOverlay">
+    <div id="loadingOverlay" role="status" aria-live="polite">
       <div class="spinner" aria-hidden="true"></div>
       <div id="loadingText">Memuat data rekening...</div>
     </div>
@@ -155,12 +180,14 @@
       <div class="footer-note" id="footerNote">© <span id="year"></span></div>
     </article>
 
-    <div class="toast" id="toast"><span id="toastText">Berhasil disalin</span></div>
+    <div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <span id="toastText">Berhasil disalin</span>
+    </div>
   </main>
 
 <script>
 /* ========== CONFIG ========== */
-const API_URL = "https://script.google.com/macros/s/AKfycbzOu-x4AWzlXooxv4pgdvi7rDywFSpFgkeobOQLlEBdZErJNpluPmpTSeDNT3heA58/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyo4cv-kHFZYlKpDfauCDYAfqZB0dX-7d0r6i5d6oz8qRVwNyCk2INWYE9FbOyzezvr/exec";
 const defaultLogo = "https://upload.wikimedia.org/wikipedia/commons/3/3f/Bank_icon.svg";
 
 /* bank logos mapping (case-insensitive matching) */
