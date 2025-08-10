@@ -24,7 +24,9 @@
     --muted:#546e7a;
     --glass: rgba(16,46,88,0.04);
   }
-  html,body{height:100%; margin:0; font-family:Inter, Arial, sans-serif; background:var(--bg); color:var(--text);}
+  html,body{
+    height:100%; margin:0; font-family:Inter, Arial, sans-serif; background:var(--bg); color:var(--text);
+  }
 
   /* Background image + blur overlay container */
   .page {
@@ -90,7 +92,36 @@
     color: var(--text);
     display:none; /* sembunyi dulu sampai data siap */
   }
-  .bank-logo{display:block; margin:8px auto 18px; width:160px; height:auto; object-fit:contain;}
+  .bank-logo{
+    display:block; margin:8px auto 18px; width:160px; height:auto; object-fit:contain;
+  }
+  .rekening-info {
+    text-align:center;
+    margin-bottom: 18px;
+  }
+  .rekening-info strong {
+    display:block;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .rekening-info > div {
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.4px;
+    margin-top: 4px;
+  }
+
+  .rekening-number {
+    font-size: 20px;
+  }
+
+  .success {
+    color: var(--success);
+    margin-top: 6px;
+    display: none;
+  }
+
   .section { text-align:center; margin-bottom:18px; }
   .label{font-size:13px; color:var(--muted); margin-bottom:6px;}
   .value { font-weight:700; font-size:20px; letter-spacing:0.4px; color:var(--text);}
@@ -141,18 +172,18 @@
   </div>
 
   <article class="card" id="card" role="region" aria-labelledby="title">
-<div class="container" id="container">
-  <img class="bank-logo" src="https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg" alt="Logo Bank">
 
-      <div class="rekening-info">
-    <strong>Nama Rekening:</strong>
-    <div id="name">-</div>
+    <img id="bankLogo" class="bank-logo" src="https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg" alt="Logo Bank">
 
-    <strong>Nomor Rekening:</strong>
-    <div class="rekening-number" id="number">-</div>
-    <button class="btn" onclick="copyText('number')">Salin Nomor Rekening</button>
-    <div class="success" id="copy-number-success">✅ Nomor rekening berhasil disalin</div>
-  </div>
+    <div class="rekening-info">
+      <strong>Nama Rekening:</strong>
+      <div id="holderName">-</div>
+
+      <strong>Nomor Rekening:</strong>
+      <div class="rekening-number" id="acctNumber">-</div>
+      <button class="btn" id="copyAcctBtn">Salin Nomor Rekening</button>
+      <div class="success" id="copy-number-success">✅ Nomor rekening berhasil disalin</div>
+    </div>
 
     <div class="section">
       <div class="label" id="labelAmount">Jumlah Transfer (Rp)</div>
@@ -173,8 +204,8 @@
       </ol>
     </div>
 
-    <div class="footer-note" id="footerNote">Copyright © 2023 Validus. All rights reserved.
-  </div>
+    <div class="footer-note" id="footerNote">Copyright © <span id="year"></span> Validus. All rights reserved.
+    </div>
   </article>
 
   <div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -199,10 +230,6 @@ const bankLogos = {
 const T = {
   id: {
     loading: "Memuat data rekening...",
-    bank: "BANK",
-    holder: "Nama Rekening",
-    number: "Nomor Rekening",
-    amount: "Jumlah Transfer (Rp)",
     copyAccount: "Salin Nomor Rekening",
     copyAmount: "Salin",
     confirm: "Saya sudah membayarkannya",
@@ -215,10 +242,6 @@ const T = {
   },
   en: {
     loading: "Loading account data...",
-    bank: "BANK",
-    holder: "Account Name",
-    number: "Account Number",
-    amount: "Transfer Amount (Rp)",
     copyAccount: "Copy Account Number",
     copyAmount: "Copy",
     confirm: "I have paid",
@@ -231,10 +254,6 @@ const T = {
   },
   zh: {
     loading: "正在加载账户信息…",
-    bank: "银行",
-    holder: "户名",
-    number: "账号",
-    amount: "转账金额 (Rp)",
     copyAccount: "复制账号",
     copyAmount: "复制",
     confirm: "我已付款",
@@ -251,8 +270,6 @@ const els = {
   loadingOverlay: document.getElementById('loadingOverlay'),
   loadingText: document.getElementById('loadingText'),
   bankLogo: document.getElementById('bankLogo'),
-  bankName: document.getElementById('bankName'),
-  labelBank: document.getElementById('labelBank'),
   holderName: document.getElementById('holderName'),
   acctNumber: document.getElementById('acctNumber'),
   copyAcctBtn: document.getElementById('copyAcctBtn'),
@@ -267,47 +284,48 @@ const els = {
   toastText: document.getElementById('toastText'),
   langSelect: document.getElementById('langSelect'),
   themeToggle: document.getElementById('themeToggle'),
-  pageRoot: document.getElementById('pageRoot'),
   yearEl: document.getElementById('year')
 };
 
 function showToast(msg){
   els.toastText.textContent = msg;
   els.toast.style.display = 'flex';
-  setTimeout(()=> els.toast.style.display = 'none', 2500);
+  setTimeout(() => els.toast.style.display = 'none', 2500);
 }
 
 function onlyDigits(s){ return (s||'').toString().replace(/[^\d]/g,''); }
 function formatRp(n){ if(!n) return ''; return 'Rp ' + Number(n).toLocaleString('id-ID'); }
+
 function setBankLogoByName(name){
   let logo = defaultLogo;
   if(name){
     const key = name.toLowerCase();
     for(const k in bankLogos){
       if(key.includes(k)){
-        logo = bankLogos[k]; break;
+        logo = bankLogos[k];
+        break;
       }
     }
   }
   els.bankLogo.src = logo;
-  els.bankLogo.onerror = function(){ this.onerror=null; this.src = defaultLogo; };
+  els.bankLogo.alt = name ? `Logo Bank ${name}` : "Logo Bank";
+  els.bankLogo.onerror = function(){
+    this.onerror=null;
+    this.src = defaultLogo;
+  };
 }
 
 function applyTranslations(lang){
   const t = T[lang] || T.id;
 
   if(els.loadingText) els.loadingText.textContent = t.loading;
-  if(els.labelBank) els.labelBank.textContent = t.bank;
-  if(document.getElementById('labelHolder')) document.getElementById('labelHolder').textContent = t.holder;
-  if(document.getElementById('labelNumber')) document.getElementById('labelNumber').textContent = t.number;
-  if(document.getElementById('labelAmount')) document.getElementById('labelAmount').textContent = t.amount;
   if(els.copyAcctBtn) els.copyAcctBtn.textContent = t.copyAccount;
   if(els.copyAmountBtn) els.copyAmountBtn.textContent = t.copyAmount;
   if(els.confirmBtn) els.confirmBtn.textContent = t.confirm;
   if(els.instr1) els.instr1.textContent = t.instr1;
   if(els.instr2) els.instr2.textContent = t.instr2;
   if(els.labelInstr) els.labelInstr.textContent = t.instrTitle;
-  if(els.amountHint) els.amountHint.textContent = t.amountPlaceholder;
+  if(els.amountHint) els.amountHint.textContent = t.amountPlaceholder || 'Silakan ketik jumlah transfer dengan angka.';
   if(els.yearEl) els.yearEl.textContent = new Date().getFullYear();
 }
 
@@ -384,11 +402,10 @@ async function loadData(){
     const number = params.number || (data.number || data.norek || data.account || '');
     const amount = params.amount || (data.amount || data.nominal || '');
 
-    document.getElementById('bankName').textContent = bank || '-';
     setBankLogoByName(bank || '');
 
-    document.getElementById('holderName').textContent = name || '-';
-    document.getElementById('acctNumber').textContent = number || '-';
+    els.holderName.textContent = name || '-';
+    els.acctNumber.textContent = number || '-';
 
     if(amount){
       els.amountInput.value = formatRp(onlyDigits(amount));
@@ -418,7 +435,3 @@ async function loadData(){
 
 </body>
 </html>
-
-
-
-
