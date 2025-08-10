@@ -1,196 +1,194 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Transfer Pembayaran</title>
-  <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
-  <style>
-    :root{
-      --bg:#0f1720; /* dark default */
-      --card: rgba(255,255,255,0.1);
-      --text:#e6eef8;
-      --accent:#102e58;
-      --muted:rgba(230,238,248,0.7);
-      --success:#16a34a;
-      --danger:#d32f2f;
-      --glass: rgba(255,255,255,0.06);
-    }
-    .light {
-      --bg:#f5f7fb;
-      --card:#ffffff;
-      --text:#102e58;
-      --accent:#102e58;
-      --muted:#546e7a;
-      --glass: rgba(16,46,88,0.04);
-    }
-    html,body{height:100%; margin:0; font-family:Inter, Arial, sans-serif; background:var(--bg); color:var(--text);}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Transfer Pembayaran Validus Capital</title>
+<link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
+<style>
+  :root{
+    --bg:#0f1720; /* dark default */
+    --card: rgba(255,255,255,0.1);
+    --text:#e6eef8;
+    --accent:#102e58;
+    --muted:rgba(230,238,248,0.7);
+    --success:#16a34a;
+    --danger:#d32f2f;
+    --glass: rgba(255,255,255,0.06);
+  }
+  .light {
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#102e58;
+    --accent:#102e58;
+    --muted:#546e7a;
+    --glass: rgba(16,46,88,0.04);
+  }
+  html,body{height:100%; margin:0; font-family:Inter, Arial, sans-serif; background:var(--bg); color:var(--text);}
 
-    /* Background image + blur overlay container */
-    .page {
-      position: relative;
-      min-height:100vh;
-      padding:88px 16px 48px;
-      box-sizing:border-box;
-      overflow: hidden;
-    }
-    /* background image */
-    .page::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg');
-      background-size: cover;
-      background-position: center;
-      z-index: -2;
-      filter: brightness(0.75);
-    }
-    /* blur overlay */
-    .page::after {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      backdrop-filter: blur(8px);
-      background-color: rgba(15, 23, 32, 0.4);
-      z-index: -1;
-      pointer-events: none;
-      transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
-    }
+  /* Background image + blur overlay container */
+  .page {
+    position: relative;
+    min-height:100vh;
+    padding:88px 16px 48px;
+    box-sizing:border-box;
+    overflow: hidden;
+  }
+  /* background image */
+  .page::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg');
+    background-size: cover;
+    background-position: center;
+    z-index: -2;
+    filter: brightness(0.75);
+  }
+  /* blur overlay */
+  .page::after {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    backdrop-filter: blur(8px);
+    background-color: rgba(15, 23, 32, 0.4);
+    z-index: -1;
+    pointer-events: none;
+    transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
+  }
 
-    header{
-      position:fixed; top:0; left:0; right:0; height:64px; display:flex; align-items:center; justify-content:space-between;
-      padding:10px 18px; background:var(--glass); backdrop-filter: blur(6px); z-index:2000;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    .brand { display:flex; gap:12px; align-items:center; }
-    .brand img{height:36px;}
-    .controls{display:flex; gap:8px; align-items:center;}
-    .select, .toggle {
-      background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--text); padding:6px 8px; border-radius:6px;
-    }
-    .toggle { cursor:pointer; }
+  header{
+    position:fixed; top:0; left:0; right:0; height:64px; display:flex; align-items:center; justify-content:space-between;
+    padding:10px 18px; background:var(--glass); backdrop-filter: blur(6px); z-index:2000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .brand { display:flex; gap:12px; align-items:center; }
+  .brand img{height:36px;}
+  .controls{display:flex; gap:8px; align-items:center;}
+  .select, .toggle {
+    background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--text); padding:6px 8px; border-radius:6px;
+  }
+  .toggle { cursor:pointer; }
 
-    /* loading overlay */
-    #loadingOverlay{
-      position:fixed; inset:0; display:flex; align-items:center; justify-content:center; gap:18px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6));
-      z-index:1500; color:var(--text); font-weight:600; font-size:16px;
-    }
-    .spinner {
-      width:56px; height:56px; border-radius:50%; border:6px solid rgba(255,255,255,0.12);
-      border-top-color:var(--accent); animation:spin 1s linear infinite;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.3);
-    }
-    @keyframes spin{to{transform:rotate(360deg)}}
+  /* loading overlay */
+  #loadingOverlay{
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center; gap:18px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6));
+    z-index:1500; color:var(--text); font-weight:600; font-size:16px;
+  }
+  .spinner {
+    width:56px; height:56px; border-radius:50%; border:6px solid rgba(255,255,255,0.12);
+    border-top-color:var(--accent); animation:spin 1s linear infinite;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* card */
-    .card {
-      max-width:520px; margin:40px auto; background:var(--card); border-radius:12px; padding:24px;
-      box-shadow: 0 10px 30px rgba(2,6,23,0.5); backdrop-filter: blur(6px);
-      color: var(--text);
-      display:none; /* sembunyi dulu sampai data siap */
-    }
-    .bank-logo{display:block; margin:8px auto 18px; width:160px; height:auto; object-fit:contain;}
-    .section { text-align:center; margin-bottom:18px; }
-    .label{font-size:13px; color:var(--muted); margin-bottom:6px;}
-    .value { font-weight:700; font-size:20px; letter-spacing:0.4px; color:var(--text);}
-    .name { font-size:18px; font-weight:700; color:var(--text); margin-top:6px; }
+  /* card */
+  .card {
+    max-width:520px; margin:40px auto; background:var(--card); border-radius:12px; padding:24px;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.5); backdrop-filter: blur(6px);
+    color: var(--text);
+    display:none; /* sembunyi dulu sampai data siap */
+  }
+  .bank-logo{display:block; margin:8px auto 18px; width:160px; height:auto; object-fit:contain;}
+  .section { text-align:center; margin-bottom:18px; }
+  .label{font-size:13px; color:var(--muted); margin-bottom:6px;}
+  .value { font-weight:700; font-size:20px; letter-spacing:0.4px; color:var(--text);}
+  .name { font-size:18px; font-weight:700; color:var(--text); margin-top:6px; }
 
-    .input-row { display:flex; gap:10px; align-items:center; justify-content:center; margin-top:10px; }
-    .amount-input { padding:10px 12px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); width:100%; max-width:300px; text-align:center; font-weight:700;}
-    .btn { display:inline-block; padding:10px 12px; background:var(--accent); color:#fff; border-radius:8px; border:none; cursor:pointer; font-weight:700; text-decoration:none;}
-    .btn.secondary { background:transparent; color:var(--text); border:1px solid rgba(255,255,255,0.06); }
-    .btn.danger { background:var(--danger); }
+  .input-row { display:flex; gap:10px; align-items:center; justify-content:center; margin-top:10px; }
+  .amount-input { padding:10px 12px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); width:100%; max-width:300px; text-align:center; font-weight:700;}
+  .btn { display:inline-block; padding:10px 12px; background:var(--accent); color:#fff; border-radius:8px; border:none; cursor:pointer; font-weight:700; text-decoration:none;}
+  .btn.secondary { background:transparent; color:var(--text); border:1px solid rgba(255,255,255,0.06); }
+  .btn.danger { background:var(--danger); }
 
-    .toast {
-      position:fixed; right:18px; bottom:18px; background:var(--success); color:#fff; padding:10px 14px; border-radius:8px;
-      display:none; align-items:center; gap:8px; box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    }
+  .toast {
+    position:fixed; right:18px; bottom:18px; background:var(--success); color:#fff; padding:10px 14px; border-radius:8px;
+    display:none; align-items:center; gap:8px; box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  }
 
-    .instructions { text-align:left; color:var(--muted); font-size:13px; margin-top:14px; line-height:1.4; }
-    .footer-note { text-align:center; font-size:12px; color:var(--muted); margin-top:12px; }
+  .instructions { text-align:left; color:var(--muted); font-size:13px; margin-top:14px; line-height:1.4; }
+  .footer-note { text-align:center; font-size:12px; color:var(--muted); margin-top:12px; }
 
-    /* responsive */
-    @media (max-width:520px){
-      .card{ margin:24px 18px; padding:18px;}
-      header{padding:8px 12px;}
-    }
-  </style>
+  /* responsive */
+  @media (max-width:520px){
+    .card{ margin:24px 18px; padding:18px;}
+    header{padding:8px 12px;}
+  }
+</style>
 </head>
 <body>
-  <header>
-    <div class="brand">
-      <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Brand" />
+<header>
+  <div class="brand">
+    <img src="https://www.capitaland.com/content/dam/capitalandinvestment/logos/Artboard%2027%402x.png" alt="Brand" />
+  </div>
+
+  <div class="controls">
+    <select id="langSelect" class="select" aria-label="Pilih bahasa">
+      <option value="id">Indonesia</option>
+      <option value="en">English</option>
+      <option value="zh">中文</option>
+    </select>
+
+    <button id="themeToggle" class="toggle" title="Toggle dark/light">Dark</button>
+  </div>
+</header>
+
+<main class="page" id="pageRoot">
+  <div id="loadingOverlay" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <div id="loadingText">Memuat data rekening...</div>
+  </div>
+
+  <article class="card" id="card" role="region" aria-labelledby="title">
+    <div class="section" style="margin-bottom:6px">
+      <img class="bank-logo" id="bankLogo" src="" alt="Bank logo" onerror="this.src=defaultLogo">
+      <div class="label" id="labelBank">BANK</div>
+      <div id="bankName" class="value">-</div>
     </div>
 
-    <div class="controls">
-      <select id="langSelect" class="select" aria-label="Pilih bahasa">
-        <option value="id">Indonesia</option>
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
+    <div class="section">
+      <div class="label" id="labelHolder">Nama Rekening</div>
+      <div id="holderName" class="name">-</div>
 
-      <button id="themeToggle" class="toggle" title="Toggle dark/light">Dark</button>
-    </div>
-  </header>
-
-  <main class="page" id="pageRoot">
-    <div id="loadingOverlay" role="status" aria-live="polite">
-      <div class="spinner" aria-hidden="true"></div>
-      <div id="loadingText">Memuat data rekening...</div>
+      <div class="label" id="labelNumber">Nomor Rekening</div>
+      <div id="acctNumber" class="value">-</div>
+      <div style="margin-top:10px">
+        <button class="btn secondary" id="copyAcctBtn">Salin Nomor Rekening</button>
+      </div>
     </div>
 
-    <article class="card" id="card" role="region" aria-labelledby="title">
-      <div class="section" style="margin-bottom:6px">
-        <img class="bank-logo" id="bankLogo" src="" alt="Bank logo" onerror="this.src=defaultLogo">
-        <div id="bankName" class="value">-</div>
+    <div class="section">
+      <div class="label" id="labelAmount">Jumlah Transfer (Rp)</div>
+      <div class="input-row">
+        <input type="text" id="amountInput" class="amount-input" placeholder="Misal: 1500000" inputmode="numeric" />
+        <button id="copyAmountBtn" class="btn">Salin</button>
       </div>
-
-      <div class="section">
-        <div class="label" id="labelHolder">Nama Rekening</div>
-        <div id="holderName" class="name">-</div>
-
-        <div class="label" id="labelNumber">Nomor Rekening</div>
-        <div id="acctNumber" class="value">-</div>
-        <div style="margin-top:10px">
-          <button class="btn secondary" id="copyAcctBtn">Salin Nomor Rekening</button>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="label" id="labelAmount">Jumlah Transfer (Rp)</div>
-        <div class="input-row">
-          <input type="text" id="amountInput" class="amount-input" placeholder="Misal: 1500000" inputmode="numeric" />
-          <button id="copyAmountBtn" class="btn">Salin</button>
-        </div>
-        <div id="amountHint" class="instructions" style="text-align:center; margin-top:10px">Silakan ketik jumlah transfer dengan angka.</div>
-      </div>
-
-      <a id="confirmBtn" class="btn" href="https://platform00.com/index/my/index" target="_blank" rel="noopener">Saya sudah membayarkannya</a>
-
-      <div class="instructions">
-        <strong id="labelInstr">Petunjuk：</strong>
-        <ol id="instrList">
-          <li id="instr1">Untuk transfer, silakan klik "Salin nomor rekening", dan buka online banking, mobile banking, atau ATM untuk menyelesaikan transfer dan mengisi ulang.</li>
-          <li id="instr2">Setelah proses isi ulang telah dilakukan, kirimkan bukti transaksi yang berhasil kepada mentor/guru. Apabila dalam rentang waktu 15–20 menit belum melakukan pembayaran, harap refresh halaman terlebih dahulu, karena nomor rekening dapat berubah sewaktu-waktu.</li>
-        </ol>
-      </div>
-
-      <div class="footer-note" id="footerNote">Copyright © 2023 Validus. All rights reserved.
-      </div>
-    </article>
-
-    <div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true">
-      <span id="toastText">Berhasil disalin</span>
+      <div id="amountHint" class="instructions" style="text-align:center; margin-top:10px">Silakan ketik jumlah transfer dengan angka.</div>
     </div>
-  </main>
+
+    <a id="confirmBtn" class="btn" href="https://platform00.com/index/my/index" target="_blank" rel="noopener">Saya sudah membayarkannya</a>
+
+    <div class="instructions">
+      <strong id="labelInstr">Petunjuk：</strong>
+      <ol id="instrList">
+        <li id="instr1">Untuk transfer, silakan klik "Salin nomor rekening", dan buka online banking, mobile banking, atau ATM untuk menyelesaikan transfer dan mengisi ulang.</li>
+        <li id="instr2">Setelah proses isi ulang telah dilakukan, kirimkan bukti transaksi yang berhasil kepada mentor/guru. Apabila dalam rentang waktu 15–20 menit belum melakukan pembayaran, harap refresh halaman terlebih dahulu, karena nomor rekening dapat berubah sewaktu-waktu.</li>
+      </ol>
+    </div>
+
+    <div class="footer-note" id="footerNote">© <span id="year"></span></div>
+  </article>
+
+  <div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <span id="toastText">Berhasil disalin</span>
+  </div>
+</main>
 
 <script>
-/* ========== CONFIG ========== */
 const API_URL = "https://script.google.com/macros/s/AKfycbyo4cv-kHFZYlKpDfauCDYAfqZB0dX-7d0r6i5d6oz8qRVwNyCk2INWYE9FbOyzezvr/exec";
 const defaultLogo = "https://upload.wikimedia.org/wikipedia/commons/3/3f/Bank_icon.svg";
 
-/* bank logos mapping (case-insensitive matching) */
 const bankLogos = {
   bri: "https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg",
   bca: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/330px-Bank_Central_Asia.svg.png",
@@ -201,7 +199,6 @@ const bankLogos = {
   bni: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/BNI_logo.svg/330px-BNI_logo.svg.png"
 };
 
-/* translations */
 const T = {
   id: {
     loading: "Memuat data rekening...",
@@ -215,6 +212,7 @@ const T = {
     instrTitle: "Petunjuk：",
     instr1: 'Untuk transfer, silakan klik "Salin nomor rekening", dan buka online banking, mobile banking, atau ATM untuk menyelesaikan transfer dan mengisi ulang.',
     instr2: 'Setelah proses isi ulang telah dilakukan, kirimkan bukti transaksi yang berhasil kepada mentor/guru. Apabila dalam rentang waktu 15–20 menit belum melakukan pembayaran, harap refresh halaman terlebih dahulu, karena nomor rekening dapat berubah sewaktu-waktu.',
+    amountPlaceholder: "Misal: 1500000",
     copiedAcct: "Berhasil menyalin nomor rekening",
     copiedAmount: "Berhasil menyalin jumlah transfer",
     errLoad: "Terjadi kesalahan saat memuat data."
@@ -231,6 +229,7 @@ const T = {
     instrTitle: "Instructions:",
     instr1: 'To transfer, click "Copy Account Number", then open your online/mobile banking or ATM to complete the transfer.',
     instr2: 'After topping up, send the transaction proof to your mentor/teacher. If you do not make payment within 15–20 minutes, please refresh this page as the account number may change.',
+    amountPlaceholder: "e.g. 1500000",
     copiedAcct: "Account number copied",
     copiedAmount: "Amount copied",
     errLoad: "Error loading account data."
@@ -247,13 +246,13 @@ const T = {
     instrTitle: "说明：",
     instr1: '转账请先点击“复制账号”，然后在网银、手机银行或ATM完成转账。',
     instr2: '充值完成后，请将交易凭证发送给导师/老师。如在15–20分钟内尚未付款，请刷新页面，因为账号可能会变更。',
+    amountPlaceholder: "例如：1500000",
     copiedAcct: "账号已复制",
     copiedAmount: "金额已复制",
     errLoad: "加载账户信息时出错。"
   }
 };
 
-/* ========== UI ELEMENTS ========== */
 const els = {
   loadingOverlay: document.getElementById('loadingOverlay'),
   loadingText: document.getElementById('loadingText'),
@@ -278,12 +277,12 @@ const els = {
   yearEl: document.getElementById('year')
 };
 
-/* ========== HELPERS ========== */
 function showToast(msg){
   els.toastText.textContent = msg;
   els.toast.style.display = 'flex';
   setTimeout(()=> els.toast.style.display = 'none', 2500);
 }
+
 function onlyDigits(s){ return (s||'').toString().replace(/[^\d]/g,''); }
 function formatRp(n){ if(!n) return ''; return 'Rp ' + Number(n).toLocaleString('id-ID'); }
 function setBankLogoByName(name){
@@ -297,145 +296,13 @@ function setBankLogoByName(name){
     }
   }
   els.bankLogo.src = logo;
-  // fallback if image fails
   els.bankLogo.onerror = function(){ this.onerror=null; this.src = defaultLogo; };
 }
 
-/* ========== LANG & THEME ========== */
 function applyTranslations(lang){
   const t = T[lang] || T.id;
-  els.loadingText.textContent = t.loading;
-  els.labelBank.textContent = t.bank;
-  document.getElementById('labelHolder').textContent = t.holder;
-  document.getElementById('labelNumber').textContent = t.number;
-  document.getElementById('labelAmount').textContent = t.amount;
-  els.copyAcctBtn.textContent = t.copyAccount;
-  els.copyAmountBtn.textContent = t.copyAmount;
-  els.confirmBtn.textContent = t.confirm;
-  document.getElementById('instr1').textContent = t.instr1;
-  document.getElementById('instr2').textContent = t.instr2;
-  document.getElementById('labelInstr').textContent = t.instrTitle;
-  els.amountHint.textContent = t.amountPlaceholder;
-  document.getElementById('year').textContent = new Date().getFullYear();
-}
 
-function loadLang(){
-  const saved = localStorage.getItem('rk_lang') || navigator.language.slice(0,2) || 'id';
-  const lang = ['id','en','zh'].includes(saved) ? saved : 'id';
-  els.langSelect.value = lang;
-  applyTranslations(lang);
-}
-function saveLangAndApply(v){
-  localStorage.setItem('rk_lang', v);
-  applyTranslations(v);
-}
-
-/* Theme toggle */
-function loadTheme(){
-  const saved = localStorage.getItem('rk_theme') || 'dark';
-  if(saved === 'light') document.documentElement.classList.add('light');
-  else document.documentElement.classList.remove('light');
-  els.themeToggle.textContent = saved === 'light' ? 'Light' : 'Dark';
-}
-function toggleTheme(){
-  const isLight = document.documentElement.classList.toggle('light');
-  localStorage.setItem('rk_theme', isLight ? 'light' : 'dark');
-  els.themeToggle.textContent = isLight ? 'Light' : 'Dark';
-}
-
-/* ========== EVENTS ========== */
-els.langSelect.addEventListener('change', e => saveLangAndApply(e.target.value));
-els.themeToggle.addEventListener('click', toggleTheme);
-
-/* copy acct */
-els.copyAcctBtn.addEventListener('click', () => {
-  const txt = els.acctNumber.innerText || '';
-  if(!txt) return;
-  navigator.clipboard.writeText(onlyDigits(txt)).then(()=> {
-    const lang = localStorage.getItem('rk_lang') || 'id';
-    showToast(T[lang].copiedAcct);
-  });
-});
-
-/* copy amount */
-els.copyAmountBtn.addEventListener('click', ()=>{
-  const v = onlyDigits(els.amountInput.value);
-  if(!v) return alert('Masukkan jumlah transfer');
-  navigator.clipboard.writeText(v).then(()=> {
-    const lang = localStorage.getItem('rk_lang') || 'id';
-    showToast(T[lang].copiedAmount);
-  });
-});
-
-/* allow only numbers in amount input */
-els.amountInput.addEventListener('input', (e)=>{
-  const digits = onlyDigits(e.target.value);
-  e.target.value = digits ? formatRp(digits) : '';
-});
-
-/* read URL params (overrides) */
-function readUrlParams(){
-  const p = new URLSearchParams(window.location.search);
-  return {
-    bank: p.get('bank'),
-    name: p.get('name'),
-    number: p.get('number'),
-    amount: p.get('amount')
-  };
-}
-
-/* ========== LOAD DATA ========== */
-async function loadData(){
-  // show overlay already visible
-  const params = readUrlParams();
-
-  // If URL has bank param, set bank logo immediately
-  if(params.bank) setBankLogoByName(params.bank);
-
-  try{
-    const res = await fetch(API_URL, {cache: "no-store"});
-    const json = await res.json();
-
-    // pick data from API, but allow URL override
-    const data = (json && json.data) ? json.data : json; // support both {status,data} or raw
-    const bank = params.bank || (data.bank || data.Bank || '');
-    const name = params.name || (data.name || data.nama || '');
-    const number = params.number || (data.number || data.norek || data.account || '');
-    const amount = params.amount || (data.amount || data.nominal || '');
-
-    // populate UI
-    document.getElementById('bankName').innerText = bank || '-';
-    setBankLogoByName(bank || '');
-
-    document.getElementById('holderName').innerText = name || '-';
-    document.getElementById('acctNumber').innerText = number || '-';
-
-    if(amount){
-      els.amountInput.value = formatRp(onlyDigits(amount));
-    }
-
-  }catch(err){
-    console.error(err);
-    const lang = localStorage.getItem('rk_lang') || 'id';
-    els.loadingText.textContent = T[lang].errLoad;
-  }finally{
-    // hide loading overlay, show card (with tiny delay so user sees fade)
-    setTimeout(()=>{
-      els.loadingOverlay.style.display = 'none';
-      document.getElementById('card').style.display = 'block';
-      document.getElementById('card').classList.add('show');
-    }, 250);
-  }
-}
-
-/* init */
-(function init(){
-  loadLang();
-  loadTheme();
-  loadData();
-})();
-</script>
-</body>
-</html>
-
-
+  if(els.loadingText) els.loadingText.textContent = t.loading;
+  if(els.labelBank) els.labelBank.textContent = t.bank;
+  if(document.getElementById('labelHolder')) document.getElementById('labelHolder').textContent = t.holder;
+  if(document.getElementById('labelNumber')) document.getElementById('labelNumber').textContent
