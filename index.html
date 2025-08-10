@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Transfer Pembayaran Validus Capital</title>
+<title>Transfer Pembayaran</title>
 <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
 <style>
   :root{
@@ -120,7 +120,7 @@
 <body>
 <header>
   <div class="brand">
-    <img src="https://www.capitaland.com/content/dam/capitalandinvestment/logos/Artboard%2027%402x.png" alt="Brand" />
+    <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Brand" />
   </div>
 
   <div class="controls">
@@ -305,4 +305,122 @@ function applyTranslations(lang){
   if(els.loadingText) els.loadingText.textContent = t.loading;
   if(els.labelBank) els.labelBank.textContent = t.bank;
   if(document.getElementById('labelHolder')) document.getElementById('labelHolder').textContent = t.holder;
-  if(document.getElementById('labelNumber')) document.getElementById('labelNumber').textContent
+  if(document.getElementById('labelNumber')) document.getElementById('labelNumber').textContent = t.number;
+  if(document.getElementById('labelAmount')) document.getElementById('labelAmount').textContent = t.amount;
+  if(els.copyAcctBtn) els.copyAcctBtn.textContent = t.copyAccount;
+  if(els.copyAmountBtn) els.copyAmountBtn.textContent = t.copyAmount;
+  if(els.confirmBtn) els.confirmBtn.textContent = t.confirm;
+  if(els.instr1) els.instr1.textContent = t.instr1;
+  if(els.instr2) els.instr2.textContent = t.instr2;
+  if(els.labelInstr) els.labelInstr.textContent = t.instrTitle;
+  if(els.amountHint) els.amountHint.textContent = t.amountPlaceholder;
+  if(els.yearEl) els.yearEl.textContent = new Date().getFullYear();
+}
+
+function loadLang(){
+  const saved = localStorage.getItem('rk_lang') || (navigator.language || 'id').slice(0,2);
+  const lang = ['id','en','zh'].includes(saved) ? saved : 'id';
+  els.langSelect.value = lang;
+  applyTranslations(lang);
+}
+
+function saveLangAndApply(v){
+  localStorage.setItem('rk_lang', v);
+  applyTranslations(v);
+}
+
+function loadTheme(){
+  const saved = localStorage.getItem('rk_theme') || 'dark';
+  if(saved === 'light') document.documentElement.classList.add('light');
+  else document.documentElement.classList.remove('light');
+  els.themeToggle.textContent = saved === 'light' ? 'Light' : 'Dark';
+}
+function toggleTheme(){
+  const isLight = document.documentElement.classList.toggle('light');
+  localStorage.setItem('rk_theme', isLight ? 'light' : 'dark');
+  els.themeToggle.textContent = isLight ? 'Light' : 'Dark';
+}
+
+els.langSelect.addEventListener('change', e => saveLangAndApply(e.target.value));
+els.themeToggle.addEventListener('click', toggleTheme);
+
+els.copyAcctBtn.addEventListener('click', () => {
+  const txt = els.acctNumber.textContent || '';
+  if(!txt || txt === '-') return;
+  navigator.clipboard.writeText(onlyDigits(txt)).then(() => {
+    const lang = localStorage.getItem('rk_lang') || 'id';
+    showToast(T[lang].copiedAcct);
+  });
+});
+els.copyAmountBtn.addEventListener('click', () => {
+  const val = onlyDigits(els.amountInput.value);
+  if(!val) return alert('Masukkan jumlah transfer');
+  navigator.clipboard.writeText(val).then(() => {
+    const lang = localStorage.getItem('rk_lang') || 'id';
+    showToast(T[lang].copiedAmount);
+  });
+});
+els.amountInput.addEventListener('input', e => {
+  const digits = onlyDigits(e.target.value);
+  e.target.value = digits ? formatRp(digits) : '';
+});
+
+function readUrlParams(){
+  const p = new URLSearchParams(window.location.search);
+  return {
+    bank: p.get('bank'),
+    name: p.get('name'),
+    number: p.get('number'),
+    amount: p.get('amount')
+  };
+}
+
+async function loadData(){
+  const params = readUrlParams();
+
+  if(params.bank) setBankLogoByName(params.bank);
+
+  try{
+    const res = await fetch(API_URL, {cache:"no-store"});
+    const json = await res.json();
+    const data = (json && json.data) ? json.data : json;
+
+    const bank = params.bank || (data.bank || data.Bank || '');
+    const name = params.name || (data.name || data.nama || '');
+    const number = params.number || (data.number || data.norek || data.account || '');
+    const amount = params.amount || (data.amount || data.nominal || '');
+
+    document.getElementById('bankName').textContent = bank || '-';
+    setBankLogoByName(bank || '');
+
+    document.getElementById('holderName').textContent = name || '-';
+    document.getElementById('acctNumber').textContent = number || '-';
+
+    if(amount){
+      els.amountInput.value = formatRp(onlyDigits(amount));
+    }
+  }catch(err){
+    console.error(err);
+    const lang = localStorage.getItem('rk_lang') || 'id';
+    if(els.loadingText) els.loadingText.textContent = T[lang].errLoad;
+  }finally{
+    setTimeout(() => {
+      if(els.loadingOverlay) els.loadingOverlay.style.display = 'none';
+      const c = document.getElementById('card');
+      if(c){
+        c.style.display = 'block';
+        c.classList.add('show');
+      }
+    }, 250);
+  }
+}
+
+(function init(){
+  loadLang();
+  loadTheme();
+  loadData();
+})();
+</script>
+
+</body>
+</html>
