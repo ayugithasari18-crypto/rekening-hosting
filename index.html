@@ -69,7 +69,7 @@ header{
   padding:24px;
   backdrop-filter: blur(6px);
   color: var(--text);
-  display:none; /* sembunyi sampai data siap */
+  display:none;
 }
 .bank-logo{
   display:block;
@@ -213,15 +213,28 @@ els.amountInput.addEventListener('input', e=>{
 
 els.yearEl.textContent = new Date().getFullYear();
 
+// baca parameter URL
+function readUrlParams(){
+  const p = new URLSearchParams(window.location.search);
+  return {
+    bank: p.get('bank'),
+    name: p.get('name'),
+    number: p.get('number'),
+    amount: p.get('amount')
+  };
+}
+
 async function loadData(){
+  const params = readUrlParams();
   try{
     const res = await fetch(API_URL,{cache:"no-store"});
     const json = await res.json();
     const data = json.data || json;
-    const bank = data.bank || 'bri';
-    const name = data.name || data.nama || 'John Doe';
-    const number = data.number || data.norek || '1234567890';
-    const amount = data.amount || data.nominal || '';
+
+    const bank = params.bank || data.bank || 'bri';
+    const name = params.name || data.name || data.nama || 'John Doe';
+    const number = params.number || data.number || data.norek || '1234567890';
+    const amount = params.amount || data.amount || data.nominal || '';
 
     setBankLogoByName(bank);
     els.holderName.textContent = name;
@@ -230,8 +243,10 @@ async function loadData(){
 
   }catch(err){
     console.error(err);
-    els.holderName.textContent = 'John Doe';
-    els.acctNumber.textContent = '1234567890';
+    els.holderName.textContent = params.name || 'John Doe';
+    els.acctNumber.textContent = params.number || '1234567890';
+    if(params.amount) els.amountInput.value = formatRp(onlyDigits(params.amount));
+    setBankLogoByName(params.bank || 'bri');
   }finally{
     setTimeout(()=>{
       els.loadingOverlay.style.display='none';
