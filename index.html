@@ -44,7 +44,7 @@
   .page::after {
     content:"";
     position:fixed; inset:0;
-    backdrop-filter:blur(1px);
+    backdrop-filter:blur(4px);
     background:rgba(15,23,32,0.2);
     z-index:-1; pointer-events:none;
     transition:backdrop-filter .3s ease, background .3s ease;
@@ -74,4 +74,183 @@
     text-align:center;
   }
   .card h1 { font-size:1.4rem; margin:0 0 12px; }
-  .card img { max-height:60px; marg
+  .card img { max-height:60px; margin:0 auto 12px; }
+  .field {
+    background:var(--glass);
+    padding:12px; border-radius:10px;
+    margin:12px 0; display:flex;
+    justify-content:space-between; align-items:center;
+  }
+  .field span { font-weight:500; }
+  .btn {
+    display:inline-block; margin-top:12px;
+    padding:10px 16px; border-radius:8px;
+    cursor:pointer; text-decoration:none; text-align:center;
+    font-weight:500; transition:.3s;
+  }
+  .btn.copy { background:var(--accent); color:#fff; }
+  .btn.confirm { background:var(--success); color:#fff; width:100%; }
+  .instructions { text-align:left; margin-top:20px; font-size:.9rem; color:var(--muted); }
+  .loadingOverlay {
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.6);
+    display:flex; justify-content:center; align-items:center;
+    color:#fff; font-size:1.2rem;
+    z-index:3000;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Brand">
+  </div>
+  <div class="controls">
+    <select id="langSelect" class="select" aria-label="Pilih bahasa">
+      <option value="id">Indonesia</option>
+      <option value="en">English</option>
+    </select>
+    <button id="themeToggle" class="toggle">Dark</button>
+  </div>
+</header>
+
+<main class="page" id="pageRoot">
+  <div class="card" id="cardBox">
+    <h1 id="bankName">Bank</h1>
+    <img id="bankLogo" src="" alt="Bank Logo">
+    <div class="field">
+      <span id="accountNumber">1234567890</span>
+      <button class="btn copy" id="copyAccount">Salin Nomor Rekening</button>
+    </div>
+    <div class="field">
+      <span id="amount">Rp0</span>
+      <button class="btn copy" id="copyAmount">Salin</button>
+    </div>
+    <button class="btn confirm" id="confirmBtn">Saya sudah membayarkannya</button>
+    <div class="instructions">
+      <strong id="instrTitle">Petunjuk:</strong>
+      <p id="instr1"></p>
+      <p id="instr2"></p>
+    </div>
+  </div>
+</main>
+
+<div class="loadingOverlay" id="loadingOverlay">Memuat data rekening...</div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyo4cv-kHFZYlKpDfauCDYAfqZB0dX-7d0r6i5d6oz8qRVwNyCk2INWYE9FbOyzezvr/exec";
+const defaultLogo = "https://upload.wikimedia.org/wikipedia/commons/3/3f/Bank_icon.svg";
+
+const bankLogos = {
+  bri:"https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg",
+  bca:"https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg",
+  danamon:"https://upload.wikimedia.org/wikipedia/commons/7/7b/Danamon.svg",
+  sinarmas:"https://www.sinarmas.com/blog/wp-content/uploads/2016/10/cropped-sm-logo-2.png",
+  cimb:"https://upload.wikimedia.org/wikipedia/commons/3/38/CIMB_Niaga_logo.svg",
+  mandiri:"https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg",
+  bni:"https://upload.wikimedia.org/wikipedia/commons/8/8e/BNI_logo.svg"
+};
+
+const T = {
+  id: {
+    loading:"Memuat data rekening...",
+    copyAccount:"Salin Nomor Rekening",
+    copyAmount:"Salin",
+    confirm:"Saya sudah membayarkannya",
+    instrTitle:"Petunjuk:",
+    instr1:'Untuk transfer, silakan klik "Salin nomor rekening", lalu buka online banking/mobile banking/ATM untuk menyelesaikan transfer.',
+    instr2:'Setelah transfer, kirim bukti transaksi ke mentor. Jika dalam 15–20 menit belum membayar, silakan refresh halaman karena nomor rekening dapat berubah.',
+    copiedAcct:"Berhasil menyalin nomor rekening",
+    copiedAmount:"Berhasil menyalin jumlah transfer",
+    errLoad:"Terjadi kesalahan saat memuat data."
+  },
+  en: {
+    loading:"Loading account data...",
+    copyAccount:"Copy Account Number",
+    copyAmount:"Copy",
+    confirm:"I have paid",
+    instrTitle:"Instructions:",
+    instr1:'To transfer, click "Copy Account Number", then open your online/mobile banking or ATM to complete the transfer.',
+    instr2:'After topping up, send proof of transaction to your mentor. If not paid within 15–20 minutes, refresh the page as the account number may change.',
+    copiedAcct:"Account number copied",
+    copiedAmount:"Amount copied",
+    errLoad:"Error loading account data."
+  }
+};
+
+function applyLang(lang) {
+  const L = T[lang] || T.id;
+  document.getElementById("loadingOverlay").textContent = L.loading;
+  document.getElementById("copyAccount").textContent = L.copyAccount;
+  document.getElementById("copyAmount").textContent = L.copyAmount;
+  document.getElementById("confirmBtn").textContent = L.confirm;
+  document.getElementById("instrTitle").textContent = L.instrTitle;
+  document.getElementById("instr1").textContent = L.instr1;
+  document.getElementById("instr2").textContent = L.instr2;
+}
+
+function loadLang() {
+  const saved = localStorage.getItem("rk_lang") || (navigator.language || "id").slice(0,2);
+  const lang = ["id","en"].includes(saved) ? saved : "id";
+  document.getElementById("langSelect").value = lang;
+  applyLang(lang);
+}
+
+function setTheme(mode) {
+  if (mode==="light") {
+    document.body.classList.add("light");
+    document.getElementById("themeToggle").textContent="Light";
+  } else {
+    document.body.classList.remove("light");
+    document.getElementById("themeToggle").textContent="Dark";
+  }
+  localStorage.setItem("rk_theme", mode);
+}
+
+async function fetchData() {
+  const overlay=document.getElementById("loadingOverlay");
+  overlay.style.display="flex";
+  try {
+    const res=await fetch(API_URL);
+    const data=await res.json();
+    document.getElementById("bankName").textContent=data.bank||"Bank";
+    document.getElementById("accountNumber").textContent=data.account||"-";
+    document.getElementById("amount").textContent=data.amount||"Rp0";
+    const logoKey=(data.bank||"").toLowerCase();
+    document.getElementById("bankLogo").src=bankLogos[logoKey]||defaultLogo;
+  } catch(e) {
+    alert(T[document.getElementById("langSelect").value].errLoad);
+  } finally {
+    overlay.style.display="none";
+  }
+}
+
+function copyText(id, msgKey) {
+  const text=document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    alert(T[document.getElementById("langSelect").value][msgKey]);
+  });
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  loadLang();
+  setTheme(localStorage.getItem("rk_theme")||"dark");
+  fetchData();
+
+  document.getElementById("langSelect").addEventListener("change",e=>{
+    const lang=e.target.value;
+    localStorage.setItem("rk_lang",lang);
+    applyLang(lang);
+  });
+
+  document.getElementById("themeToggle").addEventListener("click",()=>{
+    const mode=document.body.classList.contains("light")?"dark":"light";
+    setTheme(mode);
+  });
+
+  document.getElementById("copyAccount").addEventListener("click",()=>copyText("accountNumber","copiedAcct"));
+  document.getElementById("copyAmount").addEventListener("click",()=>copyText("amount","copiedAmount"));
+});
+</script>
+</body>
+</html>
