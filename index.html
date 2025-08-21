@@ -7,20 +7,18 @@
 <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
 <style>
 :root{
-  --bg:#0f1720;
-  --card: rgba(255,255,255,0.1);
+  --card: rgba(255,255,255,0.15);
   --text:#e6eef8;
   --accent:#102e58;
   --muted:rgba(230,238,248,0.7);
   --success:#16a34a;
   --danger:#d32f2f;
-  --glass: rgba(255,255,255,0.06);
 }
 html,body{
   height:100%;
   margin:0;
   font-family:Inter, Arial, sans-serif;
-  background:var(--bg);
+  background:transparent; 
   color:var(--text);
 }
 .page {
@@ -44,7 +42,7 @@ html,body{
   position:fixed;
   top:0; left:0; right:0; bottom:0;
   backdrop-filter: blur(4px);
-  background-color: rgba(15,23,32,0.2);
+  background-color: rgba(255,255,255,0.05);
   z-index:-1;
   pointer-events:none;
 }
@@ -57,32 +55,11 @@ header{
   align-items:center;
   justify-content:space-between;
   padding:10px 18px;
-  background:var(--glass);
+  background:rgba(255,255,255,0.05);
   backdrop-filter: blur(6px);
   z-index:2000;
 }
 .brand img{height:36px;}
-
-#loadingOverlay{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  background: rgba(0,0,0,0.5);
-  z-index:1500;
-  color:var(--text);
-  font-weight:600;
-}
-.spinner {
-  width:40px; height:40px;
-  border:5px solid rgba(255,255,255,0.2);
-  border-top-color:var(--accent);
-  border-radius:50%;
-  animation:spin 1s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
 
 .card {
   max-width:520px;
@@ -92,7 +69,7 @@ header{
   padding:24px;
   backdrop-filter: blur(6px);
   color: var(--text);
-  display:none;
+  display:none; /* sembunyi sampai data siap */
 }
 .bank-logo{
   display:block;
@@ -113,6 +90,20 @@ header{
 .instructions { text-align:left; color:var(--muted); font-size:13px; margin-top:14px; line-height:1.4; }
 .footer-note { text-align:center; font-size:12px; color:var(--muted); margin-top:12px; }
 
+#loadingOverlay{
+  position:fixed; inset:0;
+  display:flex;
+  align-items:center; justify-content:center;
+  gap:18px;
+  background: rgba(0,0,0,0.3);
+  z-index:1500;
+  color:var(--text);
+  font-weight:600;
+  font-size:16px;
+}
+.spinner { width:56px; height:56px; border-radius:50%; border:6px solid rgba(255,255,255,0.12); border-top-color:var(--accent); animation:spin 1s linear infinite; }
+@keyframes spin{to{transform:rotate(360deg)}}
+
 @media (max-width:520px){
   .card{ margin:24px 18px; padding:18px;}
 }
@@ -126,9 +117,9 @@ header{
 </header>
 
 <main class="page">
-<div id="loadingOverlay">
-  <div class="spinner"></div>
-  <div id="loadingText">Memuat data rekening...</div>
+<div id="loadingOverlay" role="status" aria-live="polite">
+  <div class="spinner" aria-hidden="true"></div>
+  Memuat data rekening...
 </div>
 
 <article class="card" id="card">
@@ -142,7 +133,7 @@ header{
   <div class="section">
     <div class="label">Jumlah Transfer (Rp)</div>
     <div class="input-row">
-      <input type="text" id="amountInput" class="amount-input" placeholder="Misal: 1500000" inputmode="numeric" />
+      <input type="text" id="amountInput" class="amount-input" placeholder="Misal: 1.500.000" inputmode="numeric" />
       <button id="copyAmountBtn" class="btn">Salin</button>
     </div>
   </div>
@@ -153,7 +144,7 @@ header{
       <li>Kirim bukti transfer ke mentor/guru. Jika belum melakukan pembayaran 15–20 menit, refresh halaman.</li>
     </ol>
   </div>
-  <div class="footer-note">Copyright © <span id="year"></span> Validus. All rights reserved. </div>
+  <div class="footer-note">Copyright © <span id="year"></span> Validus. All rights reserved.</div>
 </article>
 
 <div class="toast" id="toast" style="display:none; position:fixed; right:18px; bottom:18px; background:var(--success); color:#fff; padding:10px 14px; border-radius:8px;">
@@ -167,26 +158,22 @@ const defaultLogo = "https://upload.wikimedia.org/wikipedia/commons/3/3f/Bank_ic
 const bankLogos = {
   bri:"https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg",
   bca:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/330px-Bank_Central_Asia.svg.png",
-  danamon:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Danamon.svg/330px-Danamon.svg.png",
-  sinarmas:"https://www.sinarmas.com/blog/wp-content/uploads/2016/10/cropped-sm-logo-2.png",
-  cimb:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/CIMB_Niaga_logo.svg/330px-CIMB_Niaga_logo.svg.png",
   mandiri:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Bank_Mandiri_logo_2016.svg/213px-Bank_Mandiri_logo_2016.svg.png",
   bni:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/BNI_logo.svg/330px-BNI_logo.svg.png"
 };
 
 const els = {
   loadingOverlay: document.getElementById('loadingOverlay'),
-  loadingText: document.getElementById('loadingText'),
   bankLogo: document.getElementById('bankLogo'),
   holderName: document.getElementById('holderName'),
   acctNumber: document.getElementById('acctNumber'),
   copyAcctBtn: document.getElementById('copyAcctBtn'),
   amountInput: document.getElementById('amountInput'),
   copyAmountBtn: document.getElementById('copyAmountBtn'),
-  confirmBtn: document.getElementById('confirmBtn'),
   toast: document.getElementById('toast'),
   toastText: document.getElementById('toastText'),
-  yearEl: document.getElementById('year')
+  yearEl: document.getElementById('year'),
+  card: document.getElementById('card')
 };
 
 function showToast(msg){
@@ -196,15 +183,17 @@ function showToast(msg){
 }
 function onlyDigits(s){ return (s||'').toString().replace(/[^\d]/g,''); }
 function formatRp(n){ return n?('Rp '+Number(n).toLocaleString('id-ID')):''; }
+
 function setBankLogoByName(name){
   let logo = defaultLogo;
   if(name){
     const key = name.toLowerCase();
-    for(const k in bankLogos){ if(key.includes(k)){ logo=bankLogos[k]; break; } }
+    for(const k in bankLogos){
+      if(key.includes(k)){ logo = bankLogos[k]; break; }
+    }
   }
   els.bankLogo.src = logo;
-  els.bankLogo.alt = name?`Logo Bank ${name}`:"Logo Bank";
-  els.bankLogo.onerror=function(){this.onerror=null;this.src=defaultLogo;};
+  els.bankLogo.alt = name ? `Logo Bank ${name}` : "Logo Bank";
 }
 
 els.copyAcctBtn.addEventListener('click',()=>{
@@ -218,32 +207,40 @@ els.copyAmountBtn.addEventListener('click',()=>{
   navigator.clipboard.writeText(val).then(()=>showToast("Berhasil menyalin jumlah transfer"));
 });
 els.amountInput.addEventListener('input', e=>{
-  const digits=onlyDigits(e.target.value);
+  const digits = onlyDigits(e.target.value);
   e.target.value = digits?formatRp(digits):'';
 });
+
+els.yearEl.textContent = new Date().getFullYear();
 
 async function loadData(){
   try{
     const res = await fetch(API_URL,{cache:"no-store"});
-    let data = {bank:'bri', name:'John Doe', number:'1234567890', amount:'1500000'};
-    if(res.ok){
-      const json = await res.json();
-      data = (json&&json.data)?json.data:json;
-    }
-    setBankLogoByName(data.bank||'');
-    els.holderName.textContent = data.name||'-';
-    els.acctNumber.textContent = data.number||'-';
-    if(data.amount) els.amountInput.value = formatRp(onlyDigits(data.amount));
+    const json = await res.json();
+    const data = json.data || json;
+    const bank = data.bank || 'bri';
+    const name = data.name || data.nama || 'John Doe';
+    const number = data.number || data.norek || '1234567890';
+    const amount = data.amount || data.nominal || '';
+
+    setBankLogoByName(bank);
+    els.holderName.textContent = name;
+    els.acctNumber.textContent = number;
+    if(amount) els.amountInput.value = formatRp(onlyDigits(amount));
+
   }catch(err){
-    console.error("Fetch error:",err);
-    els.loadingText.textContent = "Tidak bisa memuat data. Gunakan data default.";
+    console.error(err);
+    els.holderName.textContent = 'John Doe';
+    els.acctNumber.textContent = '1234567890';
   }finally{
-    els.loadingOverlay.style.display='none';
-    document.getElementById('card').style.display='block';
+    setTimeout(()=>{
+      els.loadingOverlay.style.display='none';
+      els.card.style.display='block';
+    },250);
   }
 }
 
-(function init(){ els.yearEl.textContent = new Date().getFullYear(); loadData(); })();
+loadData();
 </script>
 </body>
 </html>
