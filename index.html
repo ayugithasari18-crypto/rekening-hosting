@@ -16,14 +16,6 @@
   --danger:#d32f2f;
   --glass: rgba(255,255,255,0.06);
 }
-.light {
-  --bg:#f5f7fb;
-  --card:#ffffff;
-  --text:#102e58;
-  --accent:#102e58;
-  --muted:#546e7a;
-  --glass: rgba(16,46,88,0.04);
-}
 html,body{
   height:100%;
   margin:0;
@@ -31,34 +23,30 @@ html,body{
   background:var(--bg);
   color:var(--text);
 }
-
-/* Background image + blur overlay container */
 .page {
   position: relative;
   min-height:100vh;
   padding:88px 16px 48px;
-  box-sizing:border-box;
-  overflow: hidden;
+  overflow:hidden;
 }
 .page::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0; right:0; bottom:0;
-  background-image: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg');
-  background-size: cover;
-  background-position: center;
-  z-index: -2;
+  content:"";
+  position:fixed;
+  top:0; left:0; right:0; bottom:0;
+  background-image:url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg');
+  background-size:cover;
+  background-position:center;
+  z-index:-2;
   filter: brightness(0.9);
 }
 .page::after {
-  content: "";
-  position: fixed;
+  content:"";
+  position:fixed;
   top:0; left:0; right:0; bottom:0;
   backdrop-filter: blur(4px);
   background-color: rgba(15,23,32,0.2);
-  z-index: -1;
-  pointer-events: none;
-  transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
+  z-index:-1;
+  pointer-events:none;
 }
 
 header{
@@ -72,53 +60,36 @@ header{
   background:var(--glass);
   backdrop-filter: blur(6px);
   z-index:2000;
-  box-shadow:0 2px 8px rgba(0,0,0,0.15);
 }
-.brand { display:flex; gap:12px; align-items:center;}
 .brand img{height:36px;}
-.controls{display:flex; gap:8px; align-items:center;}
-.select, .toggle {
-  background:transparent;
-  border:1px solid rgba(255,255,255,0.06);
-  color:var(--text);
-  padding:6px 8px;
-  border-radius:6px;
-}
-.toggle { cursor:pointer; }
 
-/* loading overlay */
 #loadingOverlay{
   position:fixed;
   inset:0;
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:18px;
-  background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6));
+  gap:10px;
+  background: rgba(0,0,0,0.5);
   z-index:1500;
   color:var(--text);
   font-weight:600;
-  font-size:16px;
 }
 .spinner {
-  width:56px;
-  height:56px;
-  border-radius:50%;
-  border:6px solid rgba(255,255,255,0.12);
+  width:40px; height:40px;
+  border:5px solid rgba(255,255,255,0.2);
   border-top-color:var(--accent);
+  border-radius:50%;
   animation:spin 1s linear infinite;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* card */
 .card {
   max-width:520px;
   margin:40px auto;
   background:var(--card);
   border-radius:12px;
   padding:24px;
-  box-shadow: 0 10px 30px rgba(2,6,23,0.5);
   backdrop-filter: blur(6px);
   color: var(--text);
   display:none;
@@ -126,32 +97,24 @@ header{
 .bank-logo{
   display:block;
   margin:8px auto 18px;
-  width:160px;
-  height:auto;
+  width:160px; height:auto;
   object-fit:contain;
 }
 .rekening-info { text-align:center; margin-bottom: 18px; }
 .rekening-info strong { display:block; margin-top: 8px; color: var(--muted); font-size: 13px; }
-.rekening-info > div { font-weight: 700; font-size: 20px; letter-spacing: 0.4px; margin-top: 4px; }
+.rekening-info > div { font-weight: 700; font-size: 20px; margin-top: 4px; }
 .rekening-number { font-size: 20px; }
 .success { color: var(--success); margin-top: 6px; display: none; }
 .section { text-align:center; margin-bottom:18px; }
 .label{font-size:13px; color:var(--muted); margin-bottom:6px;}
-.value { font-weight:700; font-size:20px; letter-spacing:0.4px; color:var(--text);}
-.name { font-size:18px; font-weight:700; color:var(--text); margin-top:6px; }
-.input-row { display:flex; gap:10px; align-items:center; justify-content:center; margin-top:10px; }
+.input-row { display:flex; gap:10px; justify-content:center; margin-top:10px; }
 .amount-input { padding:10px 12px; border-radius:8px; border:1px solid rgba(0,0,0,0.08); width:100%; max-width:300px; text-align:center; font-weight:700;}
 .btn { display:inline-block; padding:10px 12px; background:var(--accent); color:#fff; border-radius:8px; border:none; cursor:pointer; font-weight:700; text-decoration:none;}
-.btn.secondary { background:transparent; color:var(--text); border:1px solid rgba(255,255,255,0.06); }
-.btn.danger { background:var(--danger); }
-.toast { position:fixed; right:18px; bottom:18px; background:var(--success); color:#fff; padding:10px 14px; border-radius:8px; display:none; align-items:center; gap:8px; box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
 .instructions { text-align:left; color:var(--muted); font-size:13px; margin-top:14px; line-height:1.4; }
 .footer-note { text-align:center; font-size:12px; color:var(--muted); margin-top:12px; }
 
-/* responsive */
 @media (max-width:520px){
   .card{ margin:24px 18px; padding:18px;}
-  header{padding:8px 12px;}
 }
 </style>
 </head>
@@ -160,24 +123,16 @@ header{
   <div class="brand">
     <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Brand" />
   </div>
-  <div class="controls">
-    <select id="langSelect" class="select" aria-label="Pilih bahasa">
-      <option value="id">Indonesia</option>
-      <option value="en">English</option>
-      <option value="zh">中文</option>
-    </select>
-    <button id="themeToggle" class="toggle" title="Toggle dark/light">Dark</button>
-  </div>
 </header>
 
-<main class="page" id="pageRoot">
-<div id="loadingOverlay" role="status" aria-live="polite">
-  <div class="spinner" aria-hidden="true"></div>
+<main class="page">
+<div id="loadingOverlay">
+  <div class="spinner"></div>
   <div id="loadingText">Memuat data rekening...</div>
 </div>
 
-<article class="card" id="card" role="region" aria-labelledby="title">
-  <img id="bankLogo" class="bank-logo" src="https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg" alt="Logo Bank">
+<article class="card" id="card">
+  <img id="bankLogo" class="bank-logo" src="" alt="Logo Bank">
   <div class="rekening-info">
     <strong>Nama Rekening:</strong> <div id="holderName">-</div>
     <strong>Nomor Rekening:</strong> <div class="rekening-number" id="acctNumber">-</div>
@@ -185,27 +140,23 @@ header{
     <div class="success" id="copy-number-success">✅ Nomor rekening berhasil disalin</div>
   </div>
   <div class="section">
-    <div class="label" id="labelAmount">Jumlah Transfer (Rp)</div>
+    <div class="label">Jumlah Transfer (Rp)</div>
     <div class="input-row">
       <input type="text" id="amountInput" class="amount-input" placeholder="Misal: 1500000" inputmode="numeric" />
       <button id="copyAmountBtn" class="btn">Salin</button>
     </div>
-    <div id="amountHint" class="instructions" style="text-align:center; margin-top:10px">
-      Silakan ketik jumlah transfer dengan angka.
-    </div>
   </div>
-  <a id="confirmBtn" class="btn" href="https://platform00.com/index/my/index" target="_blank" rel="noopener">Saya sudah membayarkannya</a>
+  <a id="confirmBtn" class="btn" href="#" target="_blank">Saya sudah membayarkannya</a>
   <div class="instructions">
-    <strong id="labelInstr">Petunjuk：</strong>
-    <ol id="instrList">
-      <li id="instr1">Untuk transfer, silakan klik "Salin nomor rekening", dan buka online banking, mobile banking, atau ATM untuk menyelesaikan transfer dan mengisi ulang.</li>
-      <li id="instr2">Setelah proses isi ulang telah dilakukan, kirimkan bukti transaksi yang berhasil kepada mentor/guru. Apabila dalam rentang waktu 15–20 menit belum melakukan pembayaran, harap refresh halaman terlebih dahulu, karena nomor rekening dapat berubah sewaktu-waktu.</li>
+    <ol>
+      <li>Salin nomor rekening, lalu transfer via online banking, mobile banking, atau ATM.</li>
+      <li>Kirim bukti transfer ke mentor/guru. Jika belum melakukan pembayaran 15–20 menit, refresh halaman.</li>
     </ol>
   </div>
-  <div class="footer-note" id="footerNote">Copyright © <span id="year"></span> Validus. All rights reserved. </div>
+  <div class="footer-note">Copyright © <span id="year"></span> Validus. All rights reserved. </div>
 </article>
 
-<div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true">
+<div class="toast" id="toast" style="display:none; position:fixed; right:18px; bottom:18px; background:var(--success); color:#fff; padding:10px 14px; border-radius:8px;">
   <span id="toastText">Berhasil disalin</span>
 </div>
 </main>
@@ -214,15 +165,14 @@ header{
 const API_URL = "https://script.google.com/macros/s/AKfycbyo4cv-kHFZYlKpDfauCDYAfqZB0dX-7d0r6i5d6oz8qRVwNyCk2INWYE9FbOyzezvr/exec";
 const defaultLogo = "https://upload.wikimedia.org/wikipedia/commons/3/3f/Bank_icon.svg";
 const bankLogos = {
-  bri: "https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg",
-  bca: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/330px-Bank_Central_Asia.svg.png",
-  danamon: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Danamon.svg/330px-Danamon.svg.png",
-  sinarmas: "https://www.sinarmas.com/blog/wp-content/uploads/2016/10/cropped-sm-logo-2.png",
-  cimb: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/CIMB_Niaga_logo.svg/330px-CIMB_Niaga_logo.svg.png",
-  mandiri: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Bank_Mandiri_logo_2016.svg/213px-Bank_Mandiri_logo_2016.svg.png",
-  bni: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/BNI_logo.svg/330px-BNI_logo.svg.png"
+  bri:"https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg",
+  bca:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/330px-Bank_Central_Asia.svg.png",
+  danamon:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Danamon.svg/330px-Danamon.svg.png",
+  sinarmas:"https://www.sinarmas.com/blog/wp-content/uploads/2016/10/cropped-sm-logo-2.png",
+  cimb:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/CIMB_Niaga_logo.svg/330px-CIMB_Niaga_logo.svg.png",
+  mandiri:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Bank_Mandiri_logo_2016.svg/213px-Bank_Mandiri_logo_2016.svg.png",
+  bni:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/BNI_logo.svg/330px-BNI_logo.svg.png"
 };
-const T = { /* translations sama seperti kode Anda sebelumnya */ };
 
 const els = {
   loadingOverlay: document.getElementById('loadingOverlay'),
@@ -233,113 +183,67 @@ const els = {
   copyAcctBtn: document.getElementById('copyAcctBtn'),
   amountInput: document.getElementById('amountInput'),
   copyAmountBtn: document.getElementById('copyAmountBtn'),
-  amountHint: document.getElementById('amountHint'),
   confirmBtn: document.getElementById('confirmBtn'),
-  instr1: document.getElementById('instr1'),
-  instr2: document.getElementById('instr2'),
-  labelInstr: document.getElementById('labelInstr'),
   toast: document.getElementById('toast'),
   toastText: document.getElementById('toastText'),
-  langSelect: document.getElementById('langSelect'),
-  themeToggle: document.getElementById('themeToggle'),
   yearEl: document.getElementById('year')
 };
 
 function showToast(msg){
   els.toastText.textContent = msg;
-  els.toast.style.display = 'flex';
+  els.toast.style.display='flex';
   setTimeout(()=>els.toast.style.display='none',2500);
 }
 function onlyDigits(s){ return (s||'').toString().replace(/[^\d]/g,''); }
-function formatRp(n){ if(!n) return ''; return 'Rp '+Number(n).toLocaleString('id-ID'); }
+function formatRp(n){ return n?('Rp '+Number(n).toLocaleString('id-ID')):''; }
 function setBankLogoByName(name){
   let logo = defaultLogo;
   if(name){
     const key = name.toLowerCase();
-    for(const k in bankLogos){ if(key.includes(k)){ logo = bankLogos[k]; break; } }
+    for(const k in bankLogos){ if(key.includes(k)){ logo=bankLogos[k]; break; } }
   }
   els.bankLogo.src = logo;
-  els.bankLogo.alt = name ? `Logo Bank ${name}` : "Logo Bank";
+  els.bankLogo.alt = name?`Logo Bank ${name}`:"Logo Bank";
   els.bankLogo.onerror=function(){this.onerror=null;this.src=defaultLogo;};
 }
-
-function applyTranslations(lang){ /* sama seperti kode Anda */ }
-
-function loadLang(){ /* sama seperti kode Anda */ }
-function saveLangAndApply(v){ /* sama seperti kode Anda */ }
-
-function loadTheme(){
-  const saved = localStorage.getItem('rk_theme') || 'dark';
-  if(saved==='light') document.documentElement.classList.add('light');
-  else document.documentElement.classList.remove('light');
-  els.themeToggle.textContent = saved==='light'?'Light':'Dark';
-}
-function toggleTheme(){
-  const isLight = document.documentElement.classList.toggle('light');
-  localStorage.setItem('rk_theme',isLight?'light':'dark');
-  els.themeToggle.textContent = isLight?'Light':'Dark';
-}
-
-els.langSelect.addEventListener('change', e=>saveLangAndApply(e.target.value));
-els.themeToggle.addEventListener('click',toggleTheme);
 
 els.copyAcctBtn.addEventListener('click',()=>{
   const txt = els.acctNumber.textContent||'';
   if(!txt||txt==='-') return;
-  navigator.clipboard.writeText(onlyDigits(txt)).then(()=>{
-    const lang = localStorage.getItem('rk_lang')||'id';
-    showToast(T[lang].copiedAcct);
-  });
+  navigator.clipboard.writeText(onlyDigits(txt)).then(()=>showToast("Berhasil menyalin nomor rekening"));
 });
 els.copyAmountBtn.addEventListener('click',()=>{
   const val = onlyDigits(els.amountInput.value);
   if(!val) return alert('Masukkan jumlah transfer');
-  navigator.clipboard.writeText(val).then(()=>{
-    const lang = localStorage.getItem('rk_lang')||'id';
-    showToast(T[lang].copiedAmount);
-  });
+  navigator.clipboard.writeText(val).then(()=>showToast("Berhasil menyalin jumlah transfer"));
 });
 els.amountInput.addEventListener('input', e=>{
-  const digits = onlyDigits(e.target.value);
+  const digits=onlyDigits(e.target.value);
   e.target.value = digits?formatRp(digits):'';
 });
 
-function readUrlParams(){
-  const p = new URLSearchParams(window.location.search);
-  return { bank:p.get('bank'), name:p.get('name'), number:p.get('number'), amount:p.get('amount') };
-}
-
 async function loadData(){
-  const params = readUrlParams();
-  if(params.bank) setBankLogoByName(params.bank);
   try{
     const res = await fetch(API_URL,{cache:"no-store"});
-    if(!res.ok) throw new Error("HTTP "+res.status);
-    const json = await res.json();
-    const data = (json&&json.data)?json.data:json;
-    const bank = params.bank || (data.bank || data.Bank || '');
-    const name = params.name || (data.name || data.nama || '');
-    const number = params.number || (data.number || data.norek || data.account || '');
-    const amount = params.amount || (data.amount || data.nominal || '');
-    setBankLogoByName(bank||'');
-    els.holderName.textContent = name||'-';
-    els.acctNumber.textContent = number||'-';
-    if(amount) els.amountInput.value = formatRp(onlyDigits(amount));
-    console.log("Data berhasil dimuat:", data);
+    let data = {bank:'bri', name:'John Doe', number:'1234567890', amount:'1500000'};
+    if(res.ok){
+      const json = await res.json();
+      data = (json&&json.data)?json.data:json;
+    }
+    setBankLogoByName(data.bank||'');
+    els.holderName.textContent = data.name||'-';
+    els.acctNumber.textContent = data.number||'-';
+    if(data.amount) els.amountInput.value = formatRp(onlyDigits(data.amount));
   }catch(err){
-    console.error("Error saat fetch:",err);
-    const lang = localStorage.getItem('rk_lang')||'id';
-    els.loadingText.textContent = T[lang].errLoad;
+    console.error("Fetch error:",err);
+    els.loadingText.textContent = "Tidak bisa memuat data. Gunakan data default.";
   }finally{
-    setTimeout(()=>{
-      if(els.loadingOverlay) els.loadingOverlay.style.display='none';
-      const c = document.getElementById('card');
-      if(c){ c.style.display='block'; c.classList.add('show'); }
-    },250);
+    els.loadingOverlay.style.display='none';
+    document.getElementById('card').style.display='block';
   }
 }
 
-(function init(){ loadLang(); loadTheme(); loadData(); })();
+(function init(){ els.yearEl.textContent = new Date().getFullYear(); loadData(); })();
 </script>
 </body>
 </html>
