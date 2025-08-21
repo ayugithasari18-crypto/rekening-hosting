@@ -6,8 +6,8 @@
 <title>Transfer Pembayaran</title>
 <link rel="icon" href="https://validusgrp.com/wp-content/themes/validus/favicon.ico">
 <style>
-  :root{
-    --bg:#0f1720; /* dark default */
+  :root {
+    --bg:#0f1720;
     --card: rgba(255,255,255,0.1);
     --text:#e6eef8;
     --accent:#102e58;
@@ -24,119 +24,54 @@
     --muted:#546e7a;
     --glass: rgba(16,46,88,0.04);
   }
-  html,body{
-    height:100%; margin:0; font-family:Inter, Arial, sans-serif; background:var(--bg); color:var(--text);
+  html, body {
+    height:100%; margin:0;
+    font-family:Inter, Arial, sans-serif;
+    background:var(--bg); color:var(--text);
   }
-  /* Background image + blur overlay container */ 
-  .page { position: relative; min-height:100vh; padding:88px 16px 48px; box-sizing:border-box; overflow: hidden; }
-
-  /* background image */
+  .page {
+    position:relative; min-height:100vh;
+    padding:88px 16px 48px;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
   .page::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-image: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg');
-    background-size: cover;
-    background-position: center;
-    z-index: -2;
-    filter: brightness(0.9);
+    content:"";
+    position:fixed; inset:0;
+    background:url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg') no-repeat center/cover;
+    z-index:-2; filter:brightness(0.9);
   }
-
-  /* blur overlay */
   .page::after {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    backdrop-filter: blur(4px);
-    background-color: rgba(15, 23, 32, 0.2);
-    z-index: -1;
-    pointer-events: none;
-    transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
+    content:"";
+    position:fixed; inset:0;
+    backdrop-filter:blur(1px);
+    background:rgba(15,23,32,0.2);
+    z-index:-1; pointer-events:none;
+    transition:backdrop-filter .3s ease, background .3s ease;
   }
-
-  header{
-    position:fixed; top:0; left:0; right:0; height:64px; display:flex; align-items:center; justify-content:space-between;
-    padding:10px 18px; background:var(--glass); backdrop-filter: blur(6px); z-index:2000;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  header {
+    position:fixed; top:0; left:0; right:0; height:64px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 18px;
+    background:var(--glass); backdrop-filter:blur(6px);
+    box-shadow:0 2px 8px rgba(0,0,0,0.15);
+    z-index:2000;
   }
   .brand { display:flex; gap:12px; align-items:center; }
-  .brand img{height:36px;}
-  .controls{display:flex; gap:8px; align-items:center;}
+  .brand img { height:36px; }
+  .controls { display:flex; gap:8px; align-items:center; }
   .select, .toggle {
-    background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--text); padding:6px 8px; border-radius:6px;
+    background:transparent; border:1px solid rgba(255,255,255,0.1);
+    color:var(--text); padding:6px 8px; border-radius:6px;
   }
   .toggle { cursor:pointer; }
-  /* ... (CSS lain tidak berubah, tetap sama) ... */
-</style>
-</head>
-<body>
-<header>
-  <div class="brand">
-    <img src="https://validusgrp.com/wp-content/uploads/2022/04/validus-capital-logo-red.png" alt="Brand" />
-  </div>
-
-  <div class="controls">
-    <select id="langSelect" class="select" aria-label="Pilih bahasa">
-      <option value="id">Indonesia</option>
-      <option value="en">English</option>
-    </select>
-
-    <button id="themeToggle" class="toggle" title="Toggle dark/light">Dark</button>
-  </div>
-</header>
-
-<main class="page" id="pageRoot">
-  <!-- seluruh konten card, loadingOverlay, dsb. sama persis -->
-</main>
-
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbyo4cv-kHFZYlKpDfauCDYAfqZB0dX-7d0r6i5d6oz8qRVwNyCk2INWYE9FbOyzezvr/exec";
-const defaultLogo = "https://upload.wikimedia.org/wikipedia/commons/3/3f/Bank_icon.svg";
-
-const bankLogos = {
-  bri: "https://upload.wikimedia.org/wikipedia/commons/6/68/BANK_BRI_logo.svg",
-  bca: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/330px-Bank_Central_Asia.svg.png",
-  danamon: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Danamon.svg/330px-Danamon.svg.png",
-  sinarmas: "https://www.sinarmas.com/blog/wp-content/uploads/2016/10/cropped-sm-logo-2.png",
-  cimb: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/CIMB_Niaga_logo.svg/330px-CIMB_Niaga_logo.svg.png",
-  mandiri: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Bank_Mandiri_logo_2016.svg/213px-Bank_Mandiri_logo_2016.svg.png",
-  bni: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/BNI_logo.svg/330px-BNI_logo.svg.png"
-};
-
-const T = {
-  id: {
-    loading: "Memuat data rekening...",
-    copyAccount: "Salin Nomor Rekening",
-    copyAmount: "Salin",
-    confirm: "Saya sudah membayarkannya",
-    instrTitle: "Petunjuk：",
-    instr1: 'Untuk transfer, silakan klik "Salin nomor rekening", dan buka online banking, mobile banking, atau ATM untuk menyelesaikan transfer dan mengisi ulang.',
-    instr2: 'Setelah proses isi ulang telah dilakukan, kirimkan bukti transaksi yang berhasil kepada mentor/guru. Apabila dalam rentang waktu 15–20 menit belum melakukan pembayaran, harap refresh halaman terlebih dahulu, karena nomor rekening dapat berubah sewaktu-waktu.', 
-    copiedAcct: "Berhasil menyalin nomor rekening",
-    copiedAmount: "Berhasil menyalin jumlah transfer",
-    errLoad: "Terjadi kesalahan saat memuat data."
-  },
-  en: {
-    loading: "Loading account data...",
-    copyAccount: "Copy Account Number",
-    copyAmount: "Copy",
-    confirm: "I have paid",
-    instrTitle: "Instructions:",
-    instr1: 'To transfer, click "Copy Account Number", then open your online/mobile banking or ATM to complete the transfer.',
-    instr2: 'After topping up, send the transaction proof to your mentor/teacher. If you do not make payment within 15–20 minutes, please refresh this page as the account number may change.',
-    copiedAcct: "Account number copied",
-    copiedAmount: "Amount copied",
-    errLoad: "Error loading account data."
+  .card {
+    max-width:460px; margin:0 auto; padding:24px;
+    background:var(--card);
+    border-radius:16px;
+    backdrop-filter:blur(8px);
+    box-shadow:0 8px 24px rgba(0,0,0,0.2);
+    text-align:center;
   }
-};
-
-function loadLang(){
-  const saved = localStorage.getItem('rk_lang') || (navigator.language || 'id').slice(0,2);
-  const lang = ['id','en'].includes(saved) ? saved : 'id';
-  document.getElementById('langSelect').value = lang;
-}
-loadLang();
-
-</script>
-</body>
-</html>
+  .card h1 { font-size:1.4rem; margin:0 0 12px; }
+  .card img { max-height:60px; marg
