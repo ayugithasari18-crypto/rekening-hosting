@@ -28,36 +28,29 @@
     height:100%; margin:0; font-family:Inter, Arial, sans-serif; background:var(--bg); color:var(--text);
   }
 
-  /* Background image + blur overlay container */
-  .page {
-    position: relative;
-    min-height:100vh;
-    padding:88px 16px 48px;
-    box-sizing:border-box;
-    overflow: hidden;
-  }
-  /* background image */
-  .page::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-image: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg');
-    background-size: cover;
-    background-position: center;
-    z-index: -2;
-    filter: brightness(0.75);
-  }
-  /* blur overlay */
-  .page::after {
-    content: "";
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    backdrop-filter: blur(8px);
-    background-color: rgba(15, 23, 32, 0.4);
-    z-index: -1;
-    pointer-events: none;
-    transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
-  }
+/* background image */
+.page::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url('https://images.pexels.com/photos/4147341/pexels-photo-4147341.jpeg');
+  background-size: cover;
+  background-position: center;
+  z-index: -2;
+  filter: brightness(0.9); /* sebelumnya 0.75 → lebih terang */
+}
+
+/* blur overlay */
+.page::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  backdrop-filter: blur(4px); /* sebelumnya 8px → lebih jelas */
+  background-color: rgba(15, 23, 32, 0.2); /* sebelumnya 0.4 → overlay lebih tipis */
+  z-index: -1;
+  pointer-events: none;
+  transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
+}
 
   header{
     position:fixed; top:0; left:0; right:0; height:64px; display:flex; align-items:center; justify-content:space-between;
