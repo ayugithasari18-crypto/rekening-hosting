@@ -24,7 +24,7 @@ html,body{
 .page {
   position: relative;
   min-height:100vh;
-  padding:88px 16px 48px;
+  padding:80px 10px 45px;
   overflow:hidden;
 }
 .page::before {
@@ -35,13 +35,13 @@ html,body{
   background-size:cover;
   background-position:center;
   z-index:-2;
-  filter: brightness(1.9);
+  filter: brightness(0.7);
 }
 .page::after {
   content:"";
   position:fixed;
   top:0; left:0; right:0; bottom:0;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(2px);
   background-color: rgba(255,255,255,0.05);
   z-index:-1;
   pointer-events:none;
@@ -259,4 +259,5 @@ loadData();
 </script>
 </body>
 </html>
+
 
